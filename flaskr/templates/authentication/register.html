@@ -27,12 +27,14 @@
                 <label>Email</label>
                 <input type="text" placeholder="Email" name="email" required>
                 <label>Password</label>
-                <input type="text" placeholder="Password" name="password" required>
+                <input type="password" placeholder="Password" name="password" id = "pass" required>
                 <label>Confirm Password</label>
-                <input type="text" placeholder="Confirm Password" name="confirm-password" required>
+                <input type="password" placeholder="Confirm Password" name="confirm-password" required>
+                <div class = "show_pass"><input type="checkbox" onclick="checkFunction()">Show Password</div>
                 <button type="submit" class="button-form button-paper"> Register</button>
             </form>
             <div class="shape reg"></div>
         </div>
     </div>
+    <script src="{{ url_for('static',filename='forms.js') }}"></script>
 {% endblock %}

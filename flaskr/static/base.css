@@ -2,6 +2,7 @@
     --bg-color: #24242d;
 
     /*forms.css*/
+    --form-control-color: rebeccapurple;
     --drop1-color: linear-gradient(
             #1845ad,
             #23a2f6
@@ -21,6 +22,8 @@
     --text-sh2: #000000;
     --text-color: #ede8e8;
     --squares-color: rgba(255, 255, 255, 0.2);
+
+
 }
 
 
