@@ -5,12 +5,10 @@
 {% block body %}
     <div class="homecontent">
         <div class="log-reg-btns">
-            <button class=".button-login-reg button-paper">
-                Register
-            </button>
-            <button class=".button-login-reg button-paper">
-                Login
-            </button>
+            {% if 'user' not in g %}
+                <a href="{{url_for('authentication.show_register')}}" class="button-login-reg button-paper"> Register </a>
+                <a href="{{url_for('authentication.show_login')}}" class="button-login-reg button-paper"> Login</a>
+            {% endif %}
         </div>
         <div class="appname font_text">GSketch</div>
         <button class="button-board create button-paper">

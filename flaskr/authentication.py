@@ -1,9 +1,9 @@
-import pymongo.errors
-
-from flask import Blueprint, render_template, current_app, flash, request, redirect, url_for, session
+from pymongo.errors import PyMongoError
+from flask import Blueprint, render_template, current_app, flash, request, redirect, url_for, session, g
+from bson.objectid import ObjectId
 from werkzeug.security import check_password_hash, generate_password_hash
 
-# This modules handles user authentication.
+# This module handles user authentication.
 authentication = Blueprint('authentication', __name__, url_prefix='/authentication')
 
 
@@ -51,7 +51,7 @@ def handle_register():
             flash("That email address is taken.")
             return redirect(url_for("authentication.show_register"))
 
-    except pymongo.errors.PyMongoError as e:
+    except PyMongoError as e:
         print(str(e))
         flash("Database error.")
         return redirect(url_for("authentication.show_register"))
@@ -66,7 +66,7 @@ def handle_register():
     # Handle any database errors that may occur.
     try:
         users.insert_one(new_user)
-    except pymongo.errors.PyMongoError as e:
+    except PyMongoError as e:
         print(str(e))
         flash("Database error.")
         return redirect(url_for("authentication.show_register"))
@@ -99,7 +99,7 @@ def handle_login():
     # Handle any database errors that may occur.
     try:
         find_user = users.find_one({"email": email})
-    except pymongo.errors.PyMongoError as e:
+    except PyMongoError as e:
         print(str(e))
         flash("Database error.")
         return redirect(url_for("authentication.show_login"))
@@ -118,3 +118,29 @@ def handle_login():
     session["user_id"] = str(find_user["_id"])
 
     return redirect(url_for("show_main"))
+
+
+# Before each application request, load the current user into the g variable.
+# The g variable is a global variable that is shared between functions
+# within one request. We can use the g variable in templates.
+@authentication.before_app_request
+def load_user():
+    # If we are serving a static file, do not query the database.
+    if request.endpoint == 'static':
+        return
+
+    # If the user_id is not in session, return.
+    if "user_id" not in session:
+        return
+
+    # Extract the user id from session.
+    user_id = session["user_id"]
+
+    # Get the "users" collection.
+    users = current_app.config.db.users
+
+    # Load the user object, and handle any database errors.
+    try:
+        g.user = users.find_one({"_id": ObjectId(user_id)})
+    except PyMongoError as e:
+        print(e)

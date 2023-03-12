@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %} Register {% endblock %}
+{% block title %} Login {% endblock %}
 
 {% block body%}
 
@@ -16,7 +16,7 @@
 
     <div class="form_shape">
         <div class="shape log"></div>
-        <form class = "form_content login" action="{{url_for('authentication.handle_register')}}" method="post">
+        <form class = "form_content login" action="{{url_for('authentication.handle_login')}}" method="post">
             <h3>Login</h3>
             <label>Email</label>
             <input type="text" placeholder="Email" name="email" required>
