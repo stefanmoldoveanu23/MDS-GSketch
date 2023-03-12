@@ -8,6 +8,8 @@
             {% if 'user' not in g %}
                 <a href="{{url_for('authentication.show_register')}}" class="button-login-reg button-paper"> Register </a>
                 <a href="{{url_for('authentication.show_login')}}" class="button-login-reg button-paper"> Login</a>
+            {% else %}
+                <a href="{{url_for('authentication.show_register')}}" class="button-login-reg button-paper"> Logout </a>
             {% endif %}
         </div>
         <div class="appname font_text">GSketch</div>

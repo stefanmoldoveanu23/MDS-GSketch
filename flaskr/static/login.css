@@ -1,10 +1,10 @@
 .login::before {
     left: 30%;
-    bottom: -120%;
+    bottom: -110%;
 }
 .login::after {
     left: 20%;
-    bottom: -120%;
+    bottom: -105%;
 }
 .log:first-child{
     left: 30vw;
