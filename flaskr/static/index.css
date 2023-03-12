@@ -1,7 +1,9 @@
 :root {
     --text-sh1:#865454;
     --text-sh2:#c4b59d;
-    --text-color: #181717
+    --text-color: #181717;
+    --bg-color:#24242d;
+    --squares-color:rgba(255,255,255,0.2);
 }
 
 body {
@@ -9,7 +11,7 @@ body {
     height:100vh;
     margin:0;
     padding:0;
-    background:#24242d;
+    background:var(--bg-color);
     overflow:hidden
 }
 .homecontent{
@@ -36,7 +38,7 @@ body {
     list-style:none;
     width:20px;
     height:20px;
-    background:rgba(255,255,255,0.2);
+    background:var( --squares-color);
     animation:animate 50s linear infinite;
     z-index:-1
 }

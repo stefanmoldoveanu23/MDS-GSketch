@@ -1,0 +1,125 @@
+:root {
+    --bg-color:#24242d;
+    --drop1-color: linear-gradient(
+            #1845ad,
+            #23a2f6
+    );
+    --drop2-color:linear-gradient(
+            to right,
+            #ff512f,
+            #f09819
+    );
+    --form-color:rgba(255, 255, 255, 0.13);
+    --form-border-cl: rgba(255, 255, 255, 0.1);
+    --input-bg-color:rgba(255, 255, 255, 0.07);
+    --submit-button-color:linear-gradient(160deg, #8ceabb 0%, #378f7b 100%);
+}
+
+*,
+*:before,
+*:after {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    width: 100%;
+    background-color: var(--bg-color);
+    overflow: hidden;
+}
+
+.form_shape {
+    display: flex;
+    flex-direction: column;
+}
+
+.shape {
+    width: 90px;
+    height: 90px;
+    border-radius: 0 50% 50% 50%;
+    border: 1px solid black;
+    transform: rotate(45deg);
+    margin-top: 20px;
+    position: absolute;
+    z-index: -1;
+}
+
+.shape:first-child {
+    float: left;
+    background:var(--drop1-color);
+    left: 25vw;
+    top: 2vh;
+}
+
+.shape:last-child {
+    float: right;
+    background: var(--drop2-color);
+    right: 25vw;
+    bottom: 2vh;
+}
+
+form {
+    height: 90vh;
+    width: 40vw;
+    background-color: var(--form-color);
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--form-border-cl);
+    box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+    padding: 50px 35px;
+}
+
+form * {
+    font-family: 'Poppins', sans-serif;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    outline: none;
+    border: none;
+}
+
+form h3 {
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 42px;
+    text-align: center;
+}
+
+label {
+    display: block;
+    margin-top: 30px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+input {
+    display: block;
+    height: 50px;
+    width: 100%;
+    background-color: var(--input-bg-color) ;
+    border-radius: 3px;
+    padding: 0 10px;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+::placeholder {
+    color: #e5e5e5;
+}
+
+button {
+    margin-top: 50px;
+    width: 100%;
+    background-image: var(--submit-button-color);
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 20vh;
+    cursor: pointer;
+}
