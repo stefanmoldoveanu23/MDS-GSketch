@@ -17,9 +17,9 @@
     --submit-button-color:linear-gradient(160deg, #8ceabb 0%, #378f7b 100%);
 
     /*index.css*/
-    --text-sh1:#865454;
-    --text-sh2:#c4b59d;
-    --text-color: #181717;
+    --text-sh1: rgba(157, 80, 80, 0.96);
+    --text-sh2: #000000;
+    --text-color: #ede8e8;
     --squares-color:rgba(255,255,255,0.2);
 }
 
@@ -35,11 +35,11 @@ body {
 
 .font_text {
     color:var(--text-color);
-    text-shadow:0 1px 1px var(--text-sh2),0 -2px 1px var(--text-sh1);
+    text-shadow:0 2px 2px var(--text-sh2),0 -3px 2px var(--text-sh1);
 }
 
 .button-paper{
-    margin: 0px;
+    margin: 0;
     background-color:var(--text-sh1);
     box-shadow:rgba(0,0,0,.9) 15px 28px 25px -18px;
     box-sizing:border-box;

@@ -88,8 +88,9 @@ input {
     color: #e5e5e5;
 }
 
-button {
+.button-reg {
+    border: 2px solid black;
     width: 20vw;
-    font-size: 18px;
+    font-size: 1rem;
     font-weight: 600;
 }
