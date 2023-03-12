@@ -3,18 +3,19 @@ function getRandomInt(min, max) {
 }
 
 $(document).ready(function () {
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 20; i++) {
         let $span = $(document.createElement('span'));
         let $lef = getRandomInt(0, 100);
         let $wit = getRandomInt(100, 150);
+        let $hei = getRandomInt(100, 150);
         let $bot = getRandomInt(-190, -160);
         let $del = getRandomInt(0, 40);
         $span.css({
             'left': $lef + '%',
             'width': $wit + 'px',
-            'height': $wit + 'px',
+            'height': $hei + 'px',
             'bottom': $bot + 'px',
-            'animation-delay': $del + 's'
+            'animation-delay': ($del - i) + 's'
         });
         $(".squares").append($span);
     }

@@ -1,0 +1,149 @@
+/*used in login and register form*/
+.form_shape {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.shape {
+    width: 90px;
+    height: 90px;
+    border-radius: 0 50% 50% 50%;
+    border: 1px solid black;
+    transform: rotate(45deg);
+    margin-top: 20px;
+    position: absolute;
+    z-index: -1;
+}
+
+.shape:first-child {
+    background:var(--drop1-color);
+}
+
+.shape:last-child {
+    background: var(--drop2-color);
+}
+.form_content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height:fit-content;
+    width: 30vw;
+    background-color: rgba(255,255,255,0.13);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 40px rgba(8,7,16,0.6);
+    overflow: hidden;
+    padding: 40px 30px 30px 30px;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    -webkit-transition: -webkit-transform 300ms, box-shadow 300ms;
+    -moz-transition: -moz-transform 300ms, box-shadow 300ms;
+    transition: transform 300ms, box-shadow 300ms;
+
+}
+.form_content *{
+    font-family: 'Poppins',sans-serif;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    outline: none;
+}
+
+.form_content::before, .form_content::after {
+    content: "";
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 40% 45% 40% 35%;
+    z-index: -1;
+}
+.form_content::before {
+    background-color: rgba(69, 105, 144, 0.73);
+    -webkit-animation: wawes 20s infinite linear;
+    -moz-animation: wawes 20s infinite linear;
+    animation: wawes 20s infinite linear;
+}
+.form_content::after {
+    background-color: rgba(2, 128, 144, 0.66);
+    -webkit-animation: wawes 21s infinite;
+    -moz-animation: wawes 21s infinite;
+    animation: wawes 21s infinite;
+}
+
+.form_content h3 {
+    font-size: 2rem;
+    line-height: 4vh;
+    text-align: center;
+}
+
+.form_content label {
+    color: var(--text-color);
+    display: block;
+    margin-top: 1vh;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.1rem;
+}
+
+.form_content input {
+    display: block;
+    height: 5vh;
+    width: 50%;
+    background-color: var(--input-bg-color) ;
+    border-radius: 3px;
+    padding: 0 10px;
+    margin-top: 1vh;
+    margin-bottom: 5vh;
+    font-size: 1rem;
+    font-weight: 200;
+}
+
+.form_content ::placeholder {
+    color: #e5e5e5;
+}
+
+.form_content .button-form {
+    width: 20vw;
+    font-size: 1rem;
+    font-weight: 600;
+}
+@-webkit-keyframes wawes {
+    from {
+        -webkit-transform: rotate(0);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+@-moz-keyframes wawes {
+    from {
+        -moz-transform: rotate(0);
+    }
+    to {
+        -moz-transform: rotate(360deg);
+    }
+}
+@keyframes wawes {
+    from {
+        -webkit-transform: rotate(0);
+        -moz-transform: rotate(0);
+        -ms-transform: rotate(0);
+        -o-transform: rotate(0);
+        transform: rotate(0);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}

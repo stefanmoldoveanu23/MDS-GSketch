@@ -39,12 +39,26 @@
         border-radius:50%
     }
 }
-
-.button-index{
+.button-board{
     align-self: center;
     display:inline-block;
     width: 20vw;
-    margin-top:40vh;
     font-size:1.3rem;
     line-height:23px;
+}
+.create{
+    margin-top:40vh;
+}
+
+.log-reg-btns{
+    margin-top: 0.5vw;
+    margin-right: 2vw;
+    align-self: flex-end;
+    display: flex;
+    flex-direction: row;
+    width: fit-content;
+}
+.button-login-reg{
+    width:fit-content;
+    font-size:1.3rem;
 }

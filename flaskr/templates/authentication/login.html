@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %} Register {% endblock %}
+
+{% block body%}
+
+    <div class="err_msg" style="display: none">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    {{message}}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <div class="form_shape">
+        <div class="shape log"></div>
+        <form class = "form_content login" action="{{url_for('authentication.handle_register')}}" method="post">
+            <h3>Login</h3>
+            <label>Email</label>
+            <input type="text" placeholder="Email" name="email" required>
+            <label>Password</label>
+            <input type="text" placeholder="Password" name="password" required>
+            <button type="submit" class="button-form button-paper"> Login</button>
+        </form>
+        <div class="shape log"></div>
+    </div>
+{% endblock %}

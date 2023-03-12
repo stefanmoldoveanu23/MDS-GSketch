@@ -1,7 +1,7 @@
 :root {
     --bg-color:#24242d;
 
-    /*register.css*/
+    /*forms.css*/
     --drop1-color: linear-gradient(
             #1845ad,
             #23a2f6
@@ -43,6 +43,7 @@ body {
     background-color:var(--text-sh1);
     box-shadow:rgba(0,0,0,.9) 15px 28px 25px -18px;
     box-sizing:border-box;
+    border: 2px solid black;
     color:var(--text-color);
     cursor:pointer;
     font-family:Neucha,sans-serif;

@@ -2,17 +2,28 @@
 
 {% block title %} Home {% endblock %}
 
-{% block body%}
-<div class="homecontent">
-    <div class="appname font_text">GSketch</div>
-    <button class="button-index button-paper">
-        Create new board
-    </button>
-</div>
+{% block body %}
+    <div class="homecontent">
+        <div class="log-reg-btns">
+            <button class=".button-login-reg button-paper">
+                Register
+            </button>
+            <button class=".button-login-reg button-paper">
+                Login
+            </button>
+        </div>
+        <div class="appname font_text">GSketch</div>
+        <button class="button-board create button-paper">
+            Create new board
+        </button>
+        <button class="button-board  button-paper">
+            Join board
+        </button>
+    </div>
 
-<div class="squares">
-</div>
+    <div class="squares">
+    </div>
 
-<script src="{{url_for('static',filename='index.js')}}"></script>
+    <script src="{{ url_for('static',filename='index.js') }}"></script>
 
 {% endblock %}

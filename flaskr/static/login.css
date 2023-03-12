@@ -1,0 +1,17 @@
+.login::before {
+    left: 30%;
+    bottom: -120%;
+}
+.login::after {
+    left: 20%;
+    bottom: -120%;
+}
+.log:first-child{
+    left: 30vw;
+    top: 15vh;
+}
+
+.log:last-child{
+    right: 30vw;
+    bottom: 15vh;
+}
