@@ -120,6 +120,16 @@ def handle_login():
     return redirect(url_for("show_main"))
 
 
+# Handle a post request to /logout.
+@authentication.post('/logout')
+def handle_logout():
+    # Remove user_id from session.
+    session.pop("user_id", None)
+
+    # Redirect to the main page.
+    return redirect(url_for("show_main"))
+
+
 # Before each application request, load the current user into the g variable.
 # The g variable is a global variable that is shared between functions
 # within one request. We can use the g variable in templates.
