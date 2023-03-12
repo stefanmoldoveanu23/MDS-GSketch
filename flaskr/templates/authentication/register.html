@@ -4,20 +4,23 @@
 
 {% block body %}
 
-    <div class="err_msg" style="display: none">
+    <div class="registercontent">
+
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 {% for message in messages %}
-                    {{ message }}
+                    <div class="err_msg">
+                        {{ message }}
+                    </div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
-    </div>
 
-    <div class="registercontent">
-        <div class="log-reg-btns">
+
+        <div class="log-reg-btns form_top">
             <a href="{{ url_for('show_main') }}" class="button-login-reg button-paper"> Home </a>
         </div>
+
         <div class="form_shape">
             <div class="shape reg"></div>
             <form class="form_content register" action="{{ url_for('authentication.handle_register') }}" method="post">
@@ -27,10 +30,10 @@
                 <label>Email</label>
                 <input type="text" placeholder="Email" name="email" required>
                 <label>Password</label>
-                <input type="password" placeholder="Password" name="password" id = "pass" required>
+                <input type="password" placeholder="Password" name="password" id="passo" required>
                 <label>Confirm Password</label>
-                <input type="password" placeholder="Confirm Password" name="confirm-password" required>
-                <div class = "show_pass"><input type="checkbox" onclick="checkFunction()">Show Password</div>
+                <input type="password" placeholder="Confirm Password" name="confirm-password" id="confpass" required>
+                <div class="show_pass"><input type="checkbox" onclick="checkFunction()">Show Password</div>
                 <button type="submit" class="button-form button-paper"> Register</button>
             </form>
             <div class="shape reg"></div>
