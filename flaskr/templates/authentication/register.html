@@ -1,13 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Register</title>
-    <link rel="stylesheet" href="{{ url_for('static',filename='register.css')}}">
-</head>
-<body>
+{% extends 'base.html' %}
 
-<div class="err_msg">
+{% block title %} Register {% endblock %}
+
+{% block body%}
+
+<div class="err_msg" style="display: none">
 {% with messages = get_flashed_messages() %}
     {% if messages %}
         {% for message in messages %}
@@ -20,7 +17,7 @@
 <div class="form_shape">
     <div class="shape"></div>
     <form action="{{url_for('authentication.handle_register')}}" method="post">
-        <h3>Register</h3>
+        <h3 class="font_text">Register</h3>
         <label>Username</label>
         <input type="text" placeholder="Username" name="username" required>
         <label>Email</label>
@@ -29,9 +26,8 @@
         <input type="text" placeholder="Password" name="password" required>
         <label>Confirm Password</label>
         <input type="text" placeholder="Confirm Password" name="confirm-password" required>
-        <button type="submit"> Register</button>
+        <button type="submit" class="button-paper"> Register</button>
     </form>
     <div class="shape"></div>
 </div>
-</body>
-</html>
+{% endblock %}
