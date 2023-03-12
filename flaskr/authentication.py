@@ -1,6 +1,6 @@
 import pymongo.errors
 
-from flask import Blueprint, render_template, current_app, flash, request, redirect, url_for
+from flask import Blueprint, render_template, current_app, flash, request, redirect, url_for, session
 from werkzeug.security import check_password_hash, generate_password_hash
 
 # This modules handles user authentication.
@@ -70,5 +70,51 @@ def handle_register():
         print(str(e))
         flash("Database error.")
         return redirect(url_for("authentication.show_register"))
+
+    return redirect(url_for("show_main"))
+
+
+@authentication.get('/login')
+def show_login():
+    return render_template("authentication/login.html")
+
+
+@authentication.post('/login')
+def handle_login():
+    # Check if the request form is valid.
+    required = ["email", "password"]
+    for param in required:
+        if param not in request.form:
+            flash("Invalid request.")
+            return redirect(url_for("authentication.show_login"))
+
+    # Extract arguments from the request form.
+    email = request.form["email"]
+    password = request.form["password"]
+
+    # Get the "users" collection.
+    users = current_app.config.db.users
+
+    # Query the database for the user with the given email.
+    # Handle any database errors that may occur.
+    try:
+        find_user = users.find_one({"email": email})
+    except pymongo.errors.PyMongoError as e:
+        print(str(e))
+        flash("Database error.")
+        return redirect(url_for("authentication.show_login"))
+
+    # If no user was found, show an error.
+    if find_user is None:
+        flash("No user with that address.")
+        return redirect(url_for("authentication.show_login"))
+
+    # If the password is not correct, show an error.
+    if not check_password_hash(find_user["password_hash"], password):
+        flash("Incorrect password.")
+        return redirect(url_for("authentication.show_login"))
+
+    # Store user_id into the session.
+    session["user_id"] = str(find_user["_id"])
 
     return redirect(url_for("show_main"))
