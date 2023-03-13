@@ -22,12 +22,18 @@
         <div class="form_shape">
             <div class="shape log"></div>
             <form class="form_content login" action="{{ url_for('authentication.handle_login') }}" method="post">
-                <h3>Login</h3>
-                <label>Email</label>
-                <input type="text" placeholder="Email" name="email" required>
-                <label>Password</label>
-                <input type="password" placeholder="Password" name="password" id="passo" required>
-                <div class="show_pass"><input type="checkbox" onclick="checkFunction()">Show Password</div>
+                <h3 class="font_text">Login</h3>
+                <div>
+                    <input type="text" name="email" required/>
+                    <label for="email">Email</label>
+                </div>
+                <div>
+                    <input type="password" name="password" id="passo" required/>
+                    <label for="password">Password</label>
+                </div>
+                <div class="show_pass">
+                    <input type="checkbox" onclick="checkFunction()">Show Password
+                </div>
                 <button type="submit" class="button-form button-paper"> Login</button>
             </form>
             <div class="shape log"></div>

@@ -26,3 +26,39 @@ if (err_msg_box.length) {
 }
 
 
+//breakdown the labels into single character spans
+$(".form_content label").each(function() {
+    let sop = '<span class="ch">'; //span opening
+    let scl = '</span>'; //span closing
+    //split the label into single letters and inject span tags around them
+    $(this).html(sop + $(this).html().split("").join(scl + sop) + scl);
+    //to prevent space-only spans from collapsing
+    $(".ch:contains(' ')").html("&nbsp;");
+})
+
+let x = $(".form_content input");
+let d;
+//animation time
+x.focus(function() {
+    //calculate movement for .ch = half of input height
+    let tm = $(this).outerHeight() / 4 * -3 + "px";
+    //label = next sibling of input
+    //to prevent multiple animation trigger by mistake we will use .stop() before animating any character and clear any animation queued by .delay()
+    $(this).next().addClass("focussed").children().stop(true).each(function(i) {
+        d = i * 50; //delay
+        $(this).delay(d).animate({
+            top: tm
+        }, 200, 'easeOutBack');
+    })
+})
+x.blur(function() {
+    //animate the label down if content of the input is empty
+    if ($(this).val() === "") {
+        $(this).next().removeClass("focussed").children().stop(true).each(function(i) {
+            d = i * 50;
+            $(this).delay(d).animate({
+                top: 0
+            }, 500, 'easeInOutBack');
+        })
+    }
+})

@@ -25,15 +25,25 @@
             <div class="shape reg"></div>
             <form class="form_content register" action="{{ url_for('authentication.handle_register') }}" method="post">
                 <h3 class="font_text">Register</h3>
-                <label>Username</label>
-                <input type="text" placeholder="Username" name="username" required>
-                <label>Email</label>
-                <input type="text" placeholder="Email" name="email" required>
-                <label>Password</label>
-                <input type="password" placeholder="Password" name="password" id="passo" required>
-                <label>Confirm Password</label>
-                <input type="password" placeholder="Confirm Password" name="confirm-password" id="confpass" required>
-                <div class="show_pass"><input type="checkbox" onclick="checkFunction()">Show Password</div>
+                <div>
+                    <input type="text" name="username" required/>
+                    <label for="username">Username</label>
+                </div>
+                <div>
+                    <input type="text" name="email" required/>
+                    <label for="email">Email</label>
+                </div>
+                <div>
+                    <input type="password" name="password" id="passo" required/>
+                    <label for="password">Password</label>
+                </div>
+                <div>
+                    <input type="password" name="confirm-password" id="confpass" required>
+                    <label for="Confirm Password">Confirm Password</label>
+                </div>
+                <div class="show_pass">
+                    <input type="checkbox" onclick="checkFunction()">Show Password
+                </div>
                 <button type="submit" class="button-form button-paper"> Register</button>
             </form>
             <div class="shape reg"></div>
