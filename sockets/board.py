@@ -8,5 +8,5 @@ class BoardNamespace(Namespace):
     def on_disconnect(self):
         pass
 
-    def on_line(self, p1, p2):
-        emit('getline', (p1, p2), broadcast=True)
+    def on_update(self, json):
+        emit('update', json, broadcast=True)
