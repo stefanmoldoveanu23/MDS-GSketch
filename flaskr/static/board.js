@@ -2,7 +2,7 @@ let socket = io('/board')
 
 // bottom layer; holds full sketch
 let sketchBottom = function(canvas) {
-    let data = null
+    let updates = []
 
     canvas.setup = function() {
         let cvsObject = canvas.createCanvas(canvas.windowWidth / 2, canvas.windowHeight / 2)
@@ -12,16 +12,16 @@ let sketchBottom = function(canvas) {
         canvas.background(255)
 
         socket.on('getline', function(p1, p2) {
-            data = [p1, p2]
+            updates.push([p1, p2])
         })
     }
 
     canvas.draw = function() {
         // draws a line immediately after receiving it from top layer
-        if (data !== null) {
+        updates.forEach(function(data) {
             canvas.line(data[0][0], data[0][1], data[1][0], data[1][1])
-            data = null
-        }
+        })
+        updates = []
     }
 
 }
