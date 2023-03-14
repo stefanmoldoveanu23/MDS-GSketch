@@ -2,6 +2,7 @@ from flask import Flask
 from flask import render_template
 from . import database
 from . import authentication
+from . import board
 
 
 def create_app():
@@ -16,6 +17,9 @@ def create_app():
 
     # Add the /authentication subpath.
     app.register_blueprint(authentication.authentication)
+
+    # Add the /board subpath
+    app.register_blueprint(board.board)
 
     # The main page.
     @app.get("/")

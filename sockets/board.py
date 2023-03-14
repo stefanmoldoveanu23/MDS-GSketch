@@ -8,5 +8,5 @@ class BoardNamespace(Namespace):
     def on_disconnect(self):
         pass
 
-    def on_my_event(self, data):
-        emit('my_response', data)
+    def on_line(self, p1, p2):
+        emit('getline', (p1, p2), broadcast=True)
