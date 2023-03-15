@@ -19,7 +19,7 @@
 
                 <div class="bottom-content">
                     <div class="sections">
-                        <a href="#">
+                        <a href="/">
                             <i class='bx bx-log-out icon' ></i>
                             <span class="text nav-text">Go home</span>
                         </a>
@@ -45,6 +45,10 @@
 
         </div>
     </div>
+    <script type="application/javascript" charset="UTF-8">
+        let board_data = JSON.parse({{ g.board_data | tojson | safe }})
+        board_data._id = board_data._id.$oid
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.js"></script>
     <script src="{{ url_for('static', filename='board/board.js') }}" type="module"></script>

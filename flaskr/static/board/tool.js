@@ -34,7 +34,7 @@ export class Tool{
 
     // Emits the data to the backend as an update.
     emit() {
-        this.socket.emit('update', this.stringify());
+        this.socket.emit('update', board_data._id, this.stringify());
     }
 
     // Serializes the data into a JSON format.
