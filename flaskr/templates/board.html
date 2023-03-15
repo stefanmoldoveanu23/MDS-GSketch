@@ -3,11 +3,50 @@
 {% block title %} Board Page {% endblock %}
 
 {% block body %}
-    <div id="board">
+    <div class="board-cont">
+        <nav class="sidebar close dark">
+            <header>
+                <i class='bx bx-chevron-right toggle'></i>
+            </header>
 
+            <div class="menu-bar">
+
+                <div class = "sections">
+                    <i class='bx bx-palette icon'></i>
+                    <span class="text nav-text">Color</span>
+                    <input id="picker" />
+                </div>
+
+                <div class="bottom-content">
+                    <div class="sections">
+                        <a href="#">
+                            <i class='bx bx-log-out icon' ></i>
+                            <span class="text nav-text">Go home</span>
+                        </a>
+                    </div>
+
+                    <div class="mode">
+                        <div class="sun-moon">
+                            <i class='bx bx-moon icon moon'></i>
+                            <i class='bx bx-sun icon sun'></i>
+                        </div>
+                        <span class="mode-text text">Dark mode</span>
+
+                        <div class="toggle-switch">
+                            <span class="switch"></span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </nav>
+        <div id="board">
+
+        </div>
     </div>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.js"></script>
     <script src="{{ url_for('static', filename='board/board.js') }}" type="module"></script>
+    <script src="{{ url_for('static', filename='slidebar.js') }}"></script>
 {% endblock %}

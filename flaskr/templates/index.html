@@ -6,18 +6,22 @@
     <div class="homecontent">
         <div class="log-reg-btns">
             {% if 'user' not in g %}
-                <a href="{{url_for('authentication.show_register')}}" class="button-login-reg button-paper"> Register </a>
-                <a href="{{url_for('authentication.show_login')}}" class="button-login-reg button-paper"> Login</a>
+                <a href="{{ url_for('authentication.show_register') }}" class="button-login-reg button-paper">
+                    Register </a>
+                <a href="{{ url_for('authentication.show_login') }}" class="button-login-reg button-paper"> Login</a>
             {% else %}
-                <form action="{{url_for('authentication.handle_logout')}}" method="post">
-                    <button  class="button-login-reg button-paper" type="submit"> Logout </button>
+                <form action="{{ url_for('authentication.handle_logout') }}" method="post">
+                    <button class="button-login-reg button-paper" type="submit"> Logout</button>
                 </form>
             {% endif %}
         </div>
         <div class="appname font_text">GSketch</div>
-        <a class="button-board create button-paper" href="{{ url_for('board.show_boardpage') }}">
-            Create new board
-        </a>
+        <!--momentan doar pentru a afisa pagina -->
+        <form action="{{ url_for('board.show_boardpage') }}" method="get" style="display: contents">
+            <button class="button-board create button-paper">
+                Create new board
+            </button>
+        </form>
         <button class="button-board  button-paper">
             Join board
         </button>

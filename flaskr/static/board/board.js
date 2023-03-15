@@ -20,20 +20,25 @@ function apply_update(canvas, update) {
     handler.print();
 }
 
-// Bottom layer; holds full sketch.
-let sketchBottom = function(canvas) {
+//Get canvas width an height
+let board =  $("#board")
+let wid =board.width()
+let hei = board.height()
 
-    canvas.setup = function() {
-        let cvsObject = canvas.createCanvas(canvas.windowWidth / 2, canvas.windowHeight / 2);
+// Bottom layer; holds full sketch.
+let sketchBottom = function (canvas) {
+
+    canvas.setup = function () {
+        let cvsObject = canvas.createCanvas(wid,hei);
         cvsObject.parent('board');
         cvsObject.style('position', 'absolute');
 
         canvas.background(255);
     }
 
-    canvas.draw = function() {
+    canvas.draw = function () {
         // draws a line immediately after receiving it from top layer
-        pending.forEach(function(update) {
+        pending.forEach(function (update) {
             apply_update(canvas, update);
         });
         pending = [];
@@ -42,11 +47,14 @@ let sketchBottom = function(canvas) {
 }
 
 // top layer; holds active addition
-let sketchTop = function(canvas) {
+let sketchTop = function (canvas) {
     let tool;
 
-    canvas.setup = function() {
-        let cvsObject = canvas.createCanvas(canvas.windowWidth / 2, canvas.windowHeight / 2);
+    canvas.setup = function () {
+        let cvsObject = canvas.createCanvas(wid,hei);
+        cvsObject.mouseReleased(function () {
+            tool.mouseReleased();
+        });
         cvsObject.parent('board');
         cvsObject.style('position', 'absolute');
 
@@ -54,13 +62,16 @@ let sketchTop = function(canvas) {
         tool = new Triangle(canvas, socket);
     }
 
-    canvas.draw = function () { tool.draw(); };
+    canvas.draw = function () {
+        tool.draw();
+    };
 
-    canvas.mouseReleased = function() { tool.mouseReleased(); };
 
 }
 
-$(document).ready(function() {
+
+
+$(document).ready(function () {
     new p5(sketchBottom);
     new p5(sketchTop);
 })
