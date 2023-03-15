@@ -2,6 +2,7 @@ from pymongo.errors import PyMongoError
 from flask import Blueprint, render_template, current_app, flash, request, redirect, url_for, session, g
 from bson.objectid import ObjectId
 from werkzeug.security import check_password_hash, generate_password_hash
+from . import validation
 
 # This module handles user authentication.
 authentication = Blueprint('authentication', __name__, url_prefix='/authentication')
@@ -28,6 +29,12 @@ def handle_register():
     email = request.form["email"]
     password = request.form["password"]
     confirm_password = request.form["confirm-password"]
+
+    # Username validation.
+    username_error = validation.check_username(username)
+    if username_error:
+        flash(username_error)
+        return redirect(url_for("authentication.show_register"))
 
     # Check if the passwords match.
     if password != confirm_password:
