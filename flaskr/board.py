@@ -1,23 +1,24 @@
-from flask import render_template, Blueprint, redirect, url_for, g, current_app, flash
+from flask import render_template, Blueprint, redirect, url_for, current_app, flash, session, g
 from pymongo.errors import PyMongoError
 from bson.objectid import ObjectId
-from bson.json_util import dumps
 
 board = Blueprint('board', __name__, url_prefix='/board')
 
 
-@board.get("/<board_id>")
-def show_board(board_id):
+@board.get("/")
+def show_board():
     print('Started showing...')
+    board_id = session["board_id"]
     boards = current_app.config.db.boards
     try:
-        board_data = boards.find_one({"_id": ObjectId(board_id)})
+        board_data = boards.find_one({'_id': ObjectId(board_id)})
+        board_data.pop('_id')
+        g.board_data = board_data
     except PyMongoError as e:
         print(str(e))
         flash("Database error")
-        return redirect(url_for("/"))
+        return redirect("/")
 
-    g.board_data = dumps(board_data)
     print('Done showing.')
     return render_template("board.html")
 
@@ -25,13 +26,14 @@ def show_board(board_id):
 @board.post("/")
 def handle_create():
     boards = current_app.config.db.boards
-    new_board = {"width": 0, "height": 0, "baseImage": "", "latestActions": []}
+    new_board = {"width": 0, "height": 0, "actions": []}
 
     try:
         new_board = boards.insert_one(new_board)
+        session['board_id'] = str(new_board.inserted_id)
     except PyMongoError as e:
         print(str(e))
         flash("Database error")
-        return redirect(url_for("/"))
+        return redirect("/")
 
-    return redirect(url_for("board.show_board", board_id=new_board.inserted_id))
+    return redirect(url_for("board.show_board"))

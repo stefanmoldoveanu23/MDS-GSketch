@@ -14,7 +14,7 @@ socket.on('update', function (update) {
 // If there was an error with the database, force exit every user to the home page.
 socket.on('database-error', function() {
     alert("There was an error with the database.");
-    document.location.href = "/";
+    $(document).location.href = "/";
 });
 
 // Apply the update to the canvas.
@@ -40,18 +40,20 @@ let sketchBottom = function (canvas) {
         let cvsObject = canvas.createCanvas(board_data.width, board_data.height);
         cvsObject.parent('board');
 
+        canvas.background(255);
+
         // Draw the image from the database.
-        canvas.loadPixels();
-        for (let i = 0; i < board_data.width; ++i) {
-            for (let j = 0; j < board_data.height; ++j) {
-                let index = 4 * (i * board_data.height + j);
-                canvas.pixels[index] = board_data.baseImage[index].charCodeAt(0);
-                canvas.pixels[index + 1] = board_data.baseImage[index + 1].charCodeAt(0);
-                canvas.pixels[index + 2] = board_data.baseImage[index + 2].charCodeAt(0);
-                canvas.pixels[index + 3] = board_data.baseImage[index + 3].charCodeAt(0);
-            }
-        }
-        canvas.updatePixels();
+        // canvas.loadPixels();
+        // for (let i = 0; i < board_data.width; ++i) {
+        //     for (let j = 0; j < board_data.height; ++j) {
+        //         let index = 4 * (i * board_data.height + j);
+        //         canvas.pixels[index] = board_data.baseImage[index].charCodeAt(0);
+        //         canvas.pixels[index + 1] = board_data.baseImage[index + 1].charCodeAt(0);
+        //         canvas.pixels[index + 2] = board_data.baseImage[index + 2].charCodeAt(0);
+        //         canvas.pixels[index + 3] = board_data.baseImage[index + 3].charCodeAt(0);
+        //     }
+        // }
+        // canvas.updatePixels();
     }
 
     canvas.draw = function () {
@@ -84,20 +86,29 @@ let sketchTop = function (canvas) {
         tool.draw();
     };
 
-
 }
 
 
 
-$(document).ready(function () {
+$(document).ready(async function () {
     // TODO: socket emit join room
 
     if (board_data.width === 0) {
         // If the board hasn't been properly created yet, initialize it.
-        socket.emit('init', board_data._id, wid, hei);
+
+        await new Promise((resolve) => {
+            socket.on('done_init', function(updated_board) {
+                resolve(updated_board);
+            });
+
+            socket.emit('init', wid, hei);
+        }).then(updated_board => {
+            board_data = updated_board
+        });
+
     }
 
-    pending = board_data.latestActions.map((x) => JSON.parse(x));
+    pending = board_data.actions.map((x) => JSON.parse(x));
 
     new p5(sketchBottom);
     new p5(sketchTop);
