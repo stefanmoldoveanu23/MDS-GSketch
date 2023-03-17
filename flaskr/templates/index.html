@@ -5,7 +5,7 @@
 {% block body %}
     <div class="homecontent">
         <div class="log-reg-btns">
-            {% if 'user' not in g %}
+            {% if g.user is none %}
                 <a href="{{ url_for('authentication.show_register') }}" class="button-login-reg button-paper">
                     Register </a>
                 <a href="{{ url_for('authentication.show_login') }}" class="button-login-reg button-paper"> Login</a>
@@ -17,8 +17,8 @@
         </div>
         <div class="appname font_text">GSketch</div>
         <!--momentan doar pentru a afisa pagina -->
-        <form action="{{ url_for('board.show_boardpage') }}" method="get" style="display: contents">
-            <button class="button-board create button-paper">
+        <form action="{{ url_for('board.create_board') }}" method="post" style="display: contents">
+            <button class="button-board create button-paper" type="submit">
                 Create new board
             </button>
         </form>
