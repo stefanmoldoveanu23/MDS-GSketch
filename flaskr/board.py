@@ -1,4 +1,3 @@
-import bson.errors
 from flask import render_template, Blueprint, redirect, g, url_for, current_app, flash, session, request
 from bson.objectid import ObjectId
 from pymongo.errors import PyMongoError
@@ -26,7 +25,7 @@ def join_board():
     # Try to convert the board id to a valid bson ObjectId, and handle any errors.
     try:
         obj_id = ObjectId(board_id)
-    except bson.errors.BSONError:
+    except BSONError:
         flash("The board id is not valid.")
         return redirect(url_for("show_main"))
 
