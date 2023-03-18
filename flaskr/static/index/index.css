@@ -74,6 +74,15 @@
     flex-direction: column;
     position: fixed;
 }
+
+.blur-all {
+    -webkit-filter: blur(10px);
+    -moz-filter: blur(10px);
+    -o-filter: blur(10px);
+    -ms-filter: blur(10px);
+    filter: blur(10px);
+}
+
 #join {
     background-color: var(--squares-color);
     backdrop-filter: blur(15px);
@@ -85,7 +94,7 @@
     z-index: 200;
     position: absolute;
     top: 50vh;
-    border: black;
+    border: 2px black;
     border-radius: 20px;
     text-align: center;
     align-items: center;
@@ -100,6 +109,7 @@
     font-size: 1rem;
     line-height: 30px;
     width:80%;
+    color:var(--text-color);
 }
 
 #join label {

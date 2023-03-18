@@ -1,6 +1,7 @@
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
+
 let mouse_is_inside = false
 $(document).ready(function () {
     for (let i = 0; i < 20; i++) {
@@ -20,15 +21,21 @@ $(document).ready(function () {
         $(".squares").append($span);
     }
 
-
-    $('#join').hover(function(){
-        mouse_is_inside=true;
-    }, function(){
-        mouse_is_inside=false;
+    $('#join_board').click(() => {
+        $('#join').css('display', 'flex');
+        $('.homecontent').children().not('.page_shape').addClass("blur-all");
+        $('.page_shape').children().not('#join','form').addClass("blur-all");
+        $('.create').addClass("blur-all");
+        $(".squares").addClass("blur-all");
+    });
+    $('#join').hover(function () {
+        mouse_is_inside = true;
+    }, function () {
+        mouse_is_inside = false;
     });
 
-    $("body").mouseup(function(){
-        if(! mouse_is_inside) $('#join').hide();
+    $("body").mouseup(function () {
+        if (!mouse_is_inside) $('#join').hide();
     });
 
     let err_msg_box = $(".err_msg")
