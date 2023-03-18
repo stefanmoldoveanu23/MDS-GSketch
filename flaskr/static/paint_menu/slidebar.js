@@ -27,3 +27,10 @@ $("#picker").kendoColorPicker({
     buttons: false,
     select: preview
 });
+
+
+function copy() {
+    let copyText = $("#copyClipboard");
+    copyText.select();
+    navigator.clipboard.writeText(copyText.val());
+}

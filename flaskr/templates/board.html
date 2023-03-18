@@ -4,14 +4,19 @@
 
 {% block body %}
     <div class="board-cont">
-        <p> {{pin}}</p>
+
         <nav class="sidebar close dark">
             <header>
                 <i class='bx bx-chevron-right toggle'></i>
             </header>
 
             <div class="menu-bar">
-
+                <div class = "sections">
+                    <div class="clipboard">
+                        <input onclick="copy()" class="copy-input" value= {{pin}} id="copyClipboard" readonly>
+                        <button class="copy-btn" id="copyButton" onclick="copy()"><i class='bx bxs-copy'></i></button>
+                    </div>
+                </div>
                 <div class = "sections">
                     <i class='bx bx-palette icon'></i>
                     <span class="text nav-text">Color</span>
