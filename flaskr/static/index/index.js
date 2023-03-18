@@ -24,7 +24,7 @@ $(document).ready(function () {
     $('#join_board').click(() => {
         $('#join').css('display', 'flex');
         $('.homecontent').children().not('.page_shape').addClass("blur-all");
-        $('.page_shape').children().not('#join','form').addClass("blur-all");
+        $('.page_shape').children().not('#join', 'form').addClass("blur-all");
         $('.create').addClass("blur-all");
         $(".squares").addClass("blur-all");
     });
@@ -35,7 +35,13 @@ $(document).ready(function () {
     });
 
     $("body").mouseup(function () {
-        if (!mouse_is_inside) $('#join').hide();
+        if (!mouse_is_inside) {
+            $('#join').hide();
+            $('.homecontent').children().not('.page_shape').removeClass("blur-all");
+            $('.page_shape').children().not('#join', 'form').removeClass("blur-all");
+            $('.create').removeClass("blur-all");
+            $(".squares").removeClass("blur-all");
+        }
     });
 
     let err_msg_box = $(".err_msg")
