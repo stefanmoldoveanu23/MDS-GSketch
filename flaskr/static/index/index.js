@@ -1,7 +1,7 @@
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
-
+let mouse_is_inside = false
 $(document).ready(function () {
     for (let i = 0; i < 20; i++) {
         let $span = $(document.createElement('span'));
@@ -19,5 +19,24 @@ $(document).ready(function () {
         });
         $(".squares").append($span);
     }
+
+
+    $('#join').hover(function(){
+        mouse_is_inside=true;
+    }, function(){
+        mouse_is_inside=false;
+    });
+
+    $("body").mouseup(function(){
+        if(! mouse_is_inside) $('#join').hide();
+    });
+
+    let err_msg_box = $(".err_msg")
+    if (err_msg_box.length) {
+        err_msg_box.slideDown("slow");
+        err_msg_box.delay(1500);
+        err_msg_box.slideUp("slow");
+    }
+
 });
 

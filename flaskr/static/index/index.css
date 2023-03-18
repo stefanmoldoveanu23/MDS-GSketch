@@ -1,0 +1,113 @@
+.appname {
+    margin-top: 30vh;
+    text-align: center;
+    display: block;
+    font-size: 10vh;
+    line-height: 8vh;
+    letter-spacing: -4px;
+    z-index: 100
+}
+
+.squares span {
+    position: absolute;
+    display: block;
+    list-style: none;
+    width: 20px;
+    height: 20px;
+    background: var(--squares-color);
+    animation: animate 50s linear infinite;
+    z-index: -1
+}
+
+
+@keyframes animate {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+        border-radius: 0
+    }
+
+    100% {
+        transform: translateY(-1000px) rotate(720deg);
+        opacity: 0;
+        border-radius: 50%
+    }
+}
+
+.button-board {
+    text-align: center;
+    align-self: center;
+    display: inline-block;
+    width: 20vw;
+    font-size: 1.3rem;
+    line-height: 23px;
+}
+
+.create {
+    margin-top: 40vh;
+}
+.join {
+    width: fit-content;
+    font-size: 1.1rem;
+    line-height: 20px;
+}
+.log-reg-btns {
+    margin-top: 0.5vw;
+    margin-right: 2vw;
+    align-self: flex-end;
+    display: flex;
+    flex-direction: row;
+    width: fit-content;
+    z-index: 200;
+}
+.form_top{
+    position:fixed;
+}
+.button-login-reg {
+    width: fit-content;
+    font-size: 1.3rem;
+}
+.page_shape {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+}
+#join {
+    background-color: var(--squares-color);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    width: 40%;
+    height: 25vh;
+    display: none;
+    flex-direction: column;
+    z-index: 200;
+    position: absolute;
+    top: 50vh;
+    border: black;
+    border-radius: 20px;
+    text-align: center;
+    align-items: center;
+    align-self: center;
+    justify-content: space-evenly;
+}
+
+#join input {
+    background-color: var(--input-bg-color) ;
+    border-radius: 3px;
+    padding: 0 10px;
+    font-size: 1rem;
+    line-height: 30px;
+    width:80%;
+}
+
+#join label {
+    padding: 10px 8px;
+    border-color: transparent;
+    cursor: text;
+    color: var(--text-color);
+    display: block;
+    font-size: 1.3rem;
+    letter-spacing: 0.1rem;
+}

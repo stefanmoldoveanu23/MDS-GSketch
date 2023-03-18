@@ -18,12 +18,6 @@ function checkFunction() {
 
 }
 
-let err_msg_box = $(".err_msg")
-if (err_msg_box.length) {
-    err_msg_box.slideDown("slow");
-    err_msg_box.delay(1500);
-    err_msg_box.slideUp("slow");
-}
 
 
 //breakdown the labels into single character spans
