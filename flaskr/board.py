@@ -6,11 +6,6 @@ from bson.errors import *
 board = Blueprint('board', __name__, url_prefix='/board')
 
 
-@board.get("/")
-def show_board():
-    return render_template("board.html")
-
-
 # A post request to /board/join will set the board_id parameter of the current session
 # to the board_id of the board the user wants to join.
 @board.post("/join/")
@@ -49,7 +44,8 @@ def join_board():
     # Set the session's board_id.
     session["board_id"] = board_id
 
-    return redirect(url_for("board.show_board"))
+    # Show the board page.
+    return render_template("board.html", pin=board_id)
 
 
 # A post request to /board/create will create a new board and then associate
@@ -83,5 +79,5 @@ def create_board():
     # Set the board_id in the session variable.
     session["board_id"] = str(board_id)
 
-    # Redirect to the board page.
-    return redirect(url_for("board.show_board"))
+    # Show the board page.
+    return render_template("board.html", pin=board_id)
