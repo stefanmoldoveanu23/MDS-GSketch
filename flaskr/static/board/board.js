@@ -35,10 +35,10 @@ socket.on('update', function (update) {
 });
 
 // Apply the update to the canvas.
-function apply_update(canvas,color, update) {
+function apply_update(canvas, update) {
     let handlers = {
-        "create_line": new Line(canvas, socket, color, update.params),
-        "create_triangle": new Triangle(canvas, socket, color, update.params)
+        "create_line": new Line(canvas, socket, update.color, update.params),
+        "create_triangle": new Triangle(canvas, socket,  update.color, update.params)
     }
     let handler = handlers[update.name];
     handler.print();
@@ -59,7 +59,7 @@ let sketchBottom = function (canvas) {
     canvas.draw = function () {
         // draws a line immediately after receiving it from top layer
         pending.forEach(function (update) {
-            apply_update(canvas, update.color, update);
+            apply_update(canvas, update);
         });
         pending = [];
     }
