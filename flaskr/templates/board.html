@@ -31,20 +31,33 @@
                 </div>
                 <div class="sections">
                     <i class='bx bx-palette icon'></i>
-                    <span class="text nav-text">Color</span>
+                    <span class="text">Color</span>
                     <input id="picker"/>
                 </div>
-                <div class="section">
+                <div class="sections" style="flex-direction: column">
+                    <span class="text">Tools</span>
                     <div class="tools">
+                        <div class="box smallbox" id="pointer"><i class='bx bxs-pointer'></i></div>
                         <div class="box smallbox" id="text"><i class='bx bx-text'></i></div>
+                        <div class="box smallbox " id="pencil"><i class='bx bxs-edit'></i></div>
+                        <div class="box smallbox " id="brush"><i class='bx bxs-paint'></i></div>
+                        <div class="box smallbox " id="erase"><i class='bx bxs-eraser'></i></div>
+                        <div class="box smallbox " id="fill"><i class='bx bxs-color-fill' ></i></div>
+                    </div>
+                </div>
+                <div class="sections" style="flex-direction: column">
+                    <span class="text">Shapes</span>
+                    <div class="tools">
+                        <div class="box smallbox " id="line"><i class='bx bx-minus'></i></div>
                         <div class="box smallbox " id="triangle"><i class='bx bx-shape-triangle'></i></div>
+                        <div class="box smallbox " id="square"><i class='bx bx-shape-square'></i></div>
                     </div>
                 </div>
                 <div class="bottom-content">
                     <div class="sections">
                         <a href={{ url_for('show_main') }}>
                             <i class='bx bx-log-out icon'></i>
-                            <span class="text nav-text">Go home</span>
+                            <span class="text">Go home</span>
                         </a>
                     </div>
 
@@ -68,7 +81,9 @@
 
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+            integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+            crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.js"></script>
     <script src="{{ url_for('static', filename='board/board.js') }}" type="module"></script>
     <script src="{{ url_for('static', filename='paint_menu/slidebar.js') }}"></script>

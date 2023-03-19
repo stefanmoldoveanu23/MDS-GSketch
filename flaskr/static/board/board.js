@@ -83,7 +83,25 @@ let sketchTop = function (canvas) {
         cvsObject.style('position', 'absolute');
 
         // The tool will eventually be assigned values by pressing the buttons; therefore it will most likely be made global.
+
         tool = new Triangle(canvas, socket);
+        $('.tools').click(function (event) {
+            let selected;
+            if ($(event.target).is('i')) {
+                $(".tools").find('div').removeClass("clicked");
+                $(event.target).parent().addClass("clicked");
+                selected = $(event.target).parent().attr('id');
+            }
+            if ($(event.target).hasClass('box')) {
+                $(".tools").find('div').removeClass("clicked");
+                $(event.target).addClass("clicked");
+                selected = $(event.target).attr('id');
+            }
+            if(selected === 'triangle')
+                tool = new Triangle(canvas, socket);
+            if(selected === 'line')
+                tool = new Line(canvas, socket);
+        });
     }
 
     canvas.draw = function () {

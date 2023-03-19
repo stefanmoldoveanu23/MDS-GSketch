@@ -58,7 +58,7 @@
 
 /* ===== Reusable code - Here ===== */
 .sidebar .sections,.sidebar .mode{
-    height: 50px;
+    height: fit-content;
     list-style: none;
     align-items: center;
     margin-top: 10px;
@@ -66,7 +66,10 @@
     flex-direction: row;
     justify-content: space-between;
 }
-
+.sidebar .sections{
+    padding: 7px 7px;
+    max-width: 265px;
+}
 .sidebar header .image,
 .sidebar .icon{
     min-width: 60px;
@@ -251,10 +254,11 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
 }
 
 .copy-input {
-    width:auto;
+    width:100%;
     cursor: pointer;
     background-color: var(--sidebar-color);
     border:none;
@@ -307,11 +311,12 @@
 .tools {
     position: relative;
     width: auto;
-    margin: 20px auto;
+    margin: 10px 10px;
     text-align: center;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+    flex-wrap: wrap;
 }
 
 
@@ -370,6 +375,7 @@
 
 
 .smallbox {
+    margin-top: 13px;
     width: 5vh;
     height:5vh;
     justify-content: center;

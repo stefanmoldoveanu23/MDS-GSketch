@@ -37,16 +37,3 @@ function copy() {
 }
 
 
-$('.tools').click(function (event) {
-
-    if ($(event.target).is('i')) {
-        $(".tools").find('div').removeClass("clicked");
-        $(event.target).parent().addClass("clicked");
-    }
-    if ($(event.target).hasClass('box')) {
-        $(".tools").find('div').removeClass("clicked");
-        $(event.target).addClass("clicked");
-    }
-});
-
-
