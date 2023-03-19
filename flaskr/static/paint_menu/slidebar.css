@@ -157,6 +157,15 @@
 .sidebar .sections:hover .text{
     color: var(--sidebar-color);
 }
+.sidebar .sections:hover .range input,
+.sidebar .sections:hover .range span,
+.sidebar .sections:hover .range input::-webkit-slider-thumb{
+    background-color: var(--sidebar-color);
+    color: var(--primary-color);
+}
+.sidebar .sections:hover .range span:before{
+    border-bottom: 12px solid var(--sidebar-color);
+}
 .sidebar.dark .sidebar .sections:hover .icon,
 .sidebar.dark .sidebar .sections:hover .text{
     color: var(--text-color-slidebar);
@@ -242,10 +251,57 @@
 .sidebar.dark .switch::before{
     left: 20px;
 }
+/*color and width*/
 
 #picker{
     margin-right:5px ;
 }
+
+.range{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.range input{
+    -webkit-appearance:none;
+    width:auto;
+    height:4px;
+    border-radius:5px;
+    background-color: var(--text-color-slidebar);
+    outline:none;
+}
+.range input::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    background-color: var(--text-color-slidebar);
+}
+.range span{
+
+    position: relative;
+    margin-left: 14px;
+    width: 50px;
+    height: 30px;
+    background-color: var(--text-color-slidebar);
+    color: var(--sidebar-color);
+    border-radius: 3px;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+.range span:before{
+    content:'';
+    position:absolute;
+    border-right:9px solid transparent;
+    border-left:9px solid transparent;
+    border-bottom:12px solid var(--text-color-slidebar);
+    left:-10px;
+    top:50%;
+    transform:translateY(-50%) rotate(-90deg);
+}
+
 
 /* board id*/
 .clipboard {
@@ -307,7 +363,7 @@
     border-radius: 5px;
     transition: .4s opacity;
 }
-
+/*tools*/
 .tools {
     position: relative;
     width: auto;
@@ -321,6 +377,7 @@
 
 
 .box {
+    cursor: pointer;
     position: relative;
     text-align: center;
     background: var(--sidebar-color);
@@ -344,7 +401,7 @@
 
 
 .box i {
-    color: rgba(55, 55, 55, 1);
+    color: var(--primary-color);
     text-shadow: 0px 0px 6px var( --box-sh-hov-inner),
     3px 3px 6px var(--box-sh) inset;
     font: normal small-caps bold 30px/20px "Helvetica";
