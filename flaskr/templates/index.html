@@ -38,8 +38,8 @@
             </button>
             <div id="join">
                 <label for="Board id">Board pin</label>
-                <input type="text"/>
                 <form action="{{ url_for('board.join_board') }}" method="post" style="display: contents">
+                    <input type="text" name="board_id"/>
                     <button class="button-board join button-paper" type="submit">
                         Join
                     </button>

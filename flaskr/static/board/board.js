@@ -5,6 +5,22 @@ let socket = io('/board');
 // This array accumulates pending changes to the board.
 let pending = [];
 
+// Immediately after we get a connection, request the board data.
+socket.on("connect", function () {
+    socket.emit("get_data");
+})
+
+// We received the board data from the server.
+socket.on("data", function (data) {
+    pending = []
+    let changes = JSON.parse(data)
+    console.log(changes)
+    changes.forEach(function (change) {
+        pending.push(change)
+    })
+})
+
+
 // On receiving changes, add them into the pending list.
 socket.on('update', function (update) {
     pending.push(JSON.parse(update))
@@ -21,15 +37,15 @@ function apply_update(canvas, update) {
 }
 
 //Get canvas width an height
-let board =  $("#board")
-let wid =board.width()
+let board = $("#board")
+let wid = board.width()
 let hei = board.height()
 
 // Bottom layer; holds full sketch.
 let sketchBottom = function (canvas) {
 
     canvas.setup = function () {
-        let cvsObject = canvas.createCanvas(wid,hei);
+        let cvsObject = canvas.createCanvas(wid, hei);
         cvsObject.parent('board');
         cvsObject.style('position', 'absolute');
 
@@ -51,7 +67,7 @@ let sketchTop = function (canvas) {
     let tool;
 
     canvas.setup = function () {
-        let cvsObject = canvas.createCanvas(wid,hei);
+        let cvsObject = canvas.createCanvas(wid, hei);
         cvsObject.mouseReleased(function () {
             tool.mouseReleased();
         });
@@ -68,7 +84,6 @@ let sketchTop = function (canvas) {
 
 
 }
-
 
 
 $(document).ready(function () {
