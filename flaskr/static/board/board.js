@@ -35,25 +35,21 @@ socket.on('update', function (update) {
 });
 
 // Apply the update to the canvas.
-function apply_update(canvas, update) {
+function apply_update(canvas,color, update) {
     let handlers = {
-        "create_line": new Line(canvas, socket, update.params),
-        "create_triangle": new Triangle(canvas, socket, update.params)
+        "create_line": new Line(canvas, socket, color, update.params),
+        "create_triangle": new Triangle(canvas, socket, color, update.params)
     }
     let handler = handlers[update.name];
     handler.print();
 }
 
-//Get canvas width an height
-let board = $("#board")
-let wid = board.width()
-let hei = board.height()
 
 // Bottom layer; holds full sketch.
 let sketchBottom = function (canvas) {
 
     canvas.setup = function () {
-        let cvsObject = canvas.createCanvas(wid, hei);
+        let cvsObject = canvas.createCanvas( window.innerWidth,  window.innerHeight);
         cvsObject.parent('board');
         cvsObject.style('position', 'absolute');
 
@@ -63,7 +59,7 @@ let sketchBottom = function (canvas) {
     canvas.draw = function () {
         // draws a line immediately after receiving it from top layer
         pending.forEach(function (update) {
-            apply_update(canvas, update);
+            apply_update(canvas, update.color, update);
         });
         pending = [];
     }
@@ -75,7 +71,7 @@ let sketchTop = function (canvas) {
     let tool;
 
     canvas.setup = function () {
-        let cvsObject = canvas.createCanvas(wid, hei);
+        let cvsObject = canvas.createCanvas(window.innerWidth,  window.innerHeight);
         cvsObject.mouseReleased(function () {
             tool.mouseReleased();
         });
@@ -83,8 +79,15 @@ let sketchTop = function (canvas) {
         cvsObject.style('position', 'absolute');
 
         // The tool will eventually be assigned values by pressing the buttons; therefore it will most likely be made global.
+        let color = $('#picker').val();
+        tool = new Triangle(canvas, socket, color);
 
-        tool = new Triangle(canvas, socket);
+        let colorpicker = $("#picker").data("kendoColorPicker");
+        colorpicker.bind("change", function (e) {
+            color = e.value;
+            tool.color = e.value;
+        })
+
         $('.tools').click(function (event) {
             let selected;
             if ($(event.target).is('i')) {
@@ -97,10 +100,10 @@ let sketchTop = function (canvas) {
                 $(event.target).addClass("clicked");
                 selected = $(event.target).attr('id');
             }
-            if(selected === 'triangle')
-                tool = new Triangle(canvas, socket);
-            if(selected === 'line')
-                tool = new Line(canvas, socket);
+            if (selected === 'triangle')
+                tool = new Triangle(canvas, socket, color);
+            if (selected === 'line')
+                tool = new Line(canvas, socket, color);
         });
     }
 

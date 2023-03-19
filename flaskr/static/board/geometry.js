@@ -8,13 +8,17 @@ class Geometry extends Tool {
     // Total number of points that represent the figure.
     cntPoints
 
-    constructor(canvas, socket, cntPoints) {
+    // Color of the figure.
+    color
+
+    constructor(canvas, socket, cntPoints, color) {
         super(canvas, socket);
         if (this.constructor === Geometry)  {
             throw new Error("Object of abstract class cannot be instantiated.");
         }
 
         this.cntPoints = cntPoints;
+        this.color = color
     }
 
     draw() {
@@ -45,12 +49,13 @@ class Geometry extends Tool {
 }
 
 export class Line extends Geometry {
-    constructor(canvas, socket, data=[null, null]) {
-        super(canvas, socket, 2);
+    constructor(canvas, socket, color, data=[null, null]) {
+        super(canvas, socket, 2, color);
         this.data = data;
     }
 
     print() {
+        this.canvas.stroke(this.color);
         if (this.data[1] !== null) {
             this.canvas.line(this.data[0][0], this.data[0][1], this.data[1][0], this.data[1][1]);
         } else if (this.data[0] !== null) {
@@ -66,6 +71,7 @@ export class Line extends Geometry {
     stringify() {
         return JSON.stringify({
             "name": "create_line",
+            "color":this.color,
             "params": this.data
         });
     }
@@ -73,13 +79,14 @@ export class Line extends Geometry {
 
 
 export class Triangle extends Geometry {
-    constructor(canvas, socket, data=[null, null, null]) {
-        super(canvas, socket, 3);
+    constructor(canvas, socket, color, data=[null, null, null]) {
+        super(canvas, socket, 3,color);
 
         this.data = data;
     }
 
     print() {
+        this.canvas.stroke(this.color);
         if (this.data[2] !== null) {
             this.canvas.noFill();
             this.canvas.triangle(this.data[0][0], this.data[0][1], this.data[1][0], this.data[1][1], this.data[2][0], this.data[2][1]);
@@ -104,6 +111,7 @@ export class Triangle extends Geometry {
     stringify() {
         return JSON.stringify({
             "name": "create_triangle",
+            "color":this.color,
             "params": this.data
         });
     }
