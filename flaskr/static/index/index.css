@@ -15,12 +15,12 @@
     width: 20px;
     height: 20px;
     background: var(--squares-color);
-    animation: animate 50s linear infinite;
+    animation: animates 50s linear infinite;
     z-index: -1
 }
 
 
-@keyframes animate {
+@keyframes animates {
     0% {
         transform: translateY(0) rotate(0deg);
         opacity: 1;

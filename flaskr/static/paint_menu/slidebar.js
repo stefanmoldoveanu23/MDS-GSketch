@@ -22,6 +22,7 @@ modeSwitch.click(function () {
 function preview(e) {
     $("#background").css("background-color", e.value);
 }
+
 $("#picker").kendoColorPicker({
     value: "#000000",
     buttons: false,
@@ -34,3 +35,18 @@ function copy() {
     copyText.select();
     navigator.clipboard.writeText(copyText.val());
 }
+
+
+$('.tools').click(function (event) {
+
+    if ($(event.target).is('i')) {
+        $(".tools").find('div').removeClass("clicked");
+        $(event.target).parent().addClass("clicked");
+    }
+    if ($(event.target).hasClass('box')) {
+        $(".tools").find('div').removeClass("clicked");
+        $(event.target).addClass("clicked");
+    }
+});
+
+

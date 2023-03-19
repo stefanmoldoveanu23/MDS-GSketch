@@ -28,6 +28,7 @@ $(document).ready(function () {
         $('.create').addClass("blur-all");
         $(".squares").addClass("blur-all");
     });
+
     $('#join').hover(function () {
         mouse_is_inside = true;
     }, function () {

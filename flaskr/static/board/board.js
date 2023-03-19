@@ -12,12 +12,20 @@ socket.on("connect", function () {
 
 // We received the board data from the server.
 socket.on("data", function (data) {
+    // Disabled loading screen
+    $(".loader-wrapper").fadeOut("slow");
+    $(".board-cont").fadeIn("slow");
+
     pending = []
     let changes = JSON.parse(data)
     console.log(changes)
     changes.forEach(function (change) {
         pending.push(change)
     })
+
+    // Create the board
+    new p5(sketchBottom);
+    new p5(sketchTop);
 })
 
 
@@ -85,8 +93,3 @@ let sketchTop = function (canvas) {
 
 }
 
-
-$(document).ready(function () {
-    new p5(sketchBottom);
-    new p5(sketchTop);
-})

@@ -23,22 +23,27 @@
             </header>
 
             <div class="menu-bar">
-                <div class = "sections">
+                <div class="sections">
                     <div class="clipboard">
-                        <input onclick="copy()" class="copy-input" value= {{pin}} id="copyClipboard" readonly>
+                        <input onclick="copy()" class="copy-input" value={{ pin }} id="copyClipboard" readonly>
                         <button class="copy-btn" id="copyButton" onclick="copy()"><i class='bx bxs-copy'></i></button>
                     </div>
                 </div>
-                <div class = "sections">
+                <div class="sections">
                     <i class='bx bx-palette icon'></i>
                     <span class="text nav-text">Color</span>
-                    <input id="picker" />
+                    <input id="picker"/>
                 </div>
-
+                <div class="section">
+                    <div class="tools">
+                        <div class="box smallbox" id="text"><i class='bx bx-text'></i></div>
+                        <div class="box smallbox " id="triangle"><i class='bx bx-shape-triangle'></i></div>
+                    </div>
+                </div>
                 <div class="bottom-content">
                     <div class="sections">
-                        <a href="#">
-                            <i class='bx bx-log-out icon' ></i>
+                        <a href={{ url_for('show_main') }}>
+                            <i class='bx bx-log-out icon'></i>
                             <span class="text nav-text">Go home</span>
                         </a>
                     </div>
@@ -63,12 +68,6 @@
 
         </div>
     </div>
-    <script>
-        $(window).on("load", () => {
-            $(".loader-wrapper").fadeOut("slow");
-            $(".board-cont").fadeIn("slow");
-        });
-    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.js"></script>
     <script src="{{ url_for('static', filename='board/board.js') }}" type="module"></script>
