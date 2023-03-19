@@ -8,8 +8,8 @@ class Geometry extends Tool {
     // Total number of points that represent the figure.
     cntPoints
 
-    constructor(canvas, socket, cntPoints) {
-        super(canvas, socket);
+    constructor(canvas, cntPoints) {
+        super(canvas);
         if (this.constructor === Geometry)  {
             throw new Error("Object of abstract class cannot be instantiated.");
         }
@@ -39,14 +39,26 @@ class Geometry extends Tool {
         }
     }
 
+    handleResize(k) {
+        for (let i = 0; i < this.cntPoints; ++i) {
+            if (this.data[i] === null) {
+                break;
+            }
+
+            this.data[i] = [this.data[i][0] / k, this.data[i][1] / k];
+        }
+    }
+
     emit() {
         super.emit();
     }
+
+    static stringify() { }
 }
 
 export class Line extends Geometry {
-    constructor(canvas, socket, data=[null, null]) {
-        super(canvas, socket, 2);
+    constructor(canvas, data=[null, null]) {
+        super(canvas, 2);
         this.data = data;
     }
 
@@ -73,8 +85,8 @@ export class Line extends Geometry {
 
 
 export class Triangle extends Geometry {
-    constructor(canvas, socket, data=[null, null, null]) {
-        super(canvas, socket, 3);
+    constructor(canvas, data=[null, null, null]) {
+        super(canvas, 3);
 
         this.data = data;
     }
@@ -101,7 +113,7 @@ export class Triangle extends Geometry {
         }
     }
 
-    stringify() {
+    stringify(object) {
         return JSON.stringify({
             "name": "create_triangle",
             "params": this.data

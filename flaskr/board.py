@@ -31,9 +31,10 @@ def handle_create():
     try:
         new_board = boards.insert_one(new_board)
         session['board_id'] = str(new_board.inserted_id)
+
+        return redirect(url_for("board.show_board"))
     except PyMongoError as e:
         print(str(e))
         flash("Database error")
         return redirect("/")
 
-    return redirect(url_for("board.show_board"))

@@ -1,6 +1,18 @@
-import {Line, Triangle} from './geometry.js';
+import {Tool} from "./tool.js";
+import {Line, Triangle} from "./geometry.js";
+
+Tool.get_object = function (canvas, json)  {
+    let handlers = {
+        "create_line": new Line(canvas, json.params),
+        "create_triangle": new Triangle(canvas, json.params)
+    };
+    return handlers[json.name];
+}
 
 let socket = io('/board');
+
+// Holds all changes done to the board.
+let changes = [];
 
 // This array accumulates pending changes to the board.
 let pending = [];
@@ -8,6 +20,7 @@ let pending = [];
 // On receiving changes, add them into the pending list.
 socket.on('update', function (update) {
     socket.emit('save', board_data._id);
+
     pending.push(JSON.parse(update));
 });
 
@@ -17,17 +30,7 @@ socket.on('database-error', function() {
     $(document).location.href = "/";
 });
 
-// Apply the update to the canvas.
-function apply_update(canvas, update) {
-    let handlers = {
-        "create_line": new Line(canvas, socket, update.params),
-        "create_triangle": new Triangle(canvas, socket, update.params)
-    };
-    let handler = handlers[update.name];
-    handler.print();
-}
-
-//Get canvas width an height
+// Get canvas width an height.
 let board =  $("#board");
 let wid = parseInt(board.width());
 let hei = parseInt(board.height());
@@ -36,32 +39,37 @@ let hei = parseInt(board.height());
 let sketchBottom = function (canvas) {
 
     canvas.setup = function () {
-        canvas.pixelDensity(1);
         let cvsObject = canvas.createCanvas(board_data.width, board_data.height);
         cvsObject.parent('board');
 
         canvas.background(255);
-
-        // Draw the image from the database.
-        // canvas.loadPixels();
-        // for (let i = 0; i < board_data.width; ++i) {
-        //     for (let j = 0; j < board_data.height; ++j) {
-        //         let index = 4 * (i * board_data.height + j);
-        //         canvas.pixels[index] = board_data.baseImage[index].charCodeAt(0);
-        //         canvas.pixels[index + 1] = board_data.baseImage[index + 1].charCodeAt(0);
-        //         canvas.pixels[index + 2] = board_data.baseImage[index + 2].charCodeAt(0);
-        //         canvas.pixels[index + 3] = board_data.baseImage[index + 3].charCodeAt(0);
-        //     }
-        // }
-        // canvas.updatePixels();
     }
 
     canvas.draw = function () {
         // draws a line immediately after receiving it from top layer
         pending.forEach(function (update) {
-            apply_update(canvas, update);
+            let handler = Tool.get_object(canvas, update);
+            handler.handleResize(1920 / canvas.width, 1080 / canvas.height);
+            changes.push(handler);
+            handler.print();
         });
         pending = [];
+    }
+
+    canvas.windowResized = function() {
+        let newWid = parseInt(board.width());
+        let newHei = parseInt(board.height());
+
+        let k = Math.max( canvas.width / newWid, canvas.height / newHei);
+
+        canvas.resizeCanvas(canvas.width / k, canvas.height / k);
+        canvas.background(255);
+
+        changes.forEach(change => {
+            change.handleResize(k);
+            change.print();
+        });
+
     }
 
 }
@@ -79,15 +87,25 @@ let sketchTop = function (canvas) {
         cvsObject.style('position', 'absolute');
 
         // The tool will eventually be assigned values by pressing the buttons; therefore it will most likely be made global.
-        tool = new Triangle(canvas, socket);
+        tool = new Triangle(canvas);
     }
 
     canvas.draw = function () {
         tool.draw();
     };
 
-}
+    canvas.windowResized = function() {
+        let newWid = parseInt(board.width());
+        let newHei = parseInt(board.height());
 
+        let k = Math.max( canvas.width / newWid, canvas.height / newHei);
+
+        canvas.resizeCanvas(canvas.width / k, canvas.height / k);
+
+        tool.handleResize(k);
+    }
+
+}
 
 
 $(document).ready(async function () {
@@ -108,8 +126,10 @@ $(document).ready(async function () {
 
     }
 
-    pending = board_data.actions.map((x) => JSON.parse(x));
+    pending = board_data.actions.map(x => JSON.parse(x));
+
+    Tool.socket = socket;
 
     new p5(sketchBottom);
     new p5(sketchTop);
-})
+});

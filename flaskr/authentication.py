@@ -142,6 +142,7 @@ def handle_logout():
 # within one request. We can use the g variable in templates.
 @authentication.before_app_request
 def load_user():
+    g.user = None
     # If we are serving a static file, do not query the database.
     if request.endpoint == 'static':
         return
