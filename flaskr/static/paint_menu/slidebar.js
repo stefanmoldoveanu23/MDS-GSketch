@@ -39,8 +39,7 @@ function copy() {
 
 $(function(){
     $('.range input').on('mousemove', function(){
-        var getValRange = $(this).val();
-        $('.range span').text(getValRange + '%');
+        $('.range span').text($(this).val() + '%');
     });
 });
 
