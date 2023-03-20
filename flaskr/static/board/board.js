@@ -95,6 +95,16 @@ let sketchTop = function (canvas) {
                 $(event.target).parent().addClass("clicked");
                 selected = $(event.target).parent().attr('id');
             }
+            if ($(event.target).is('svg')) {
+                $(".tools").find('div').removeClass("clicked");
+                $(event.target).parent().addClass("clicked");
+                selected = $(event.target).parent().attr('id');
+            }
+            if ($(event.target).is('path')) {
+                $(".tools").find('div').removeClass("clicked");
+                $(event.target).parent().parent().addClass("clicked");
+                selected = $(event.target).parent().parent().attr('id');
+            }
             if ($(event.target).hasClass('box')) {
                 $(".tools").find('div').removeClass("clicked");
                 $(event.target).addClass("clicked");
