@@ -15,6 +15,7 @@ class Geometry extends Tool {
         }
 
         this.cntPoints = cntPoints;
+        this.data = new Array(this.cntPoints).fill(null);
     }
 
     draw() {
@@ -22,14 +23,13 @@ class Geometry extends Tool {
             // If the figure has been completed, send the data to the other users.
             this.emit();
             this.data = new Array(this.cntPoints).fill(null);
-            this.canvas.clear();
         } else {
             // Otherwise, print the data on the canvas.
             this.print();
         }
     }
 
-    mouseReleased() {
+    mouseClicked() {
         // Insert the current mouse position into the next open space.
         for (let i = 0; i < this.cntPoints; ++i) {
             if (this.data[i] === null) {
@@ -37,6 +37,11 @@ class Geometry extends Tool {
                 break;
             }
         }
+    }
+
+    resetData() {
+        super.resetData();
+        this.data = new Array(this.cntPoints).fill(null);
     }
 
     handleResize(k) {
@@ -49,11 +54,7 @@ class Geometry extends Tool {
         }
     }
 
-    emit() {
-        super.emit();
-    }
-
-    static stringify() { }
+    stringify() { }
 }
 
 export class Line extends Geometry {

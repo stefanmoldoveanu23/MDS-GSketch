@@ -11,7 +11,7 @@ Tool.get_object = function (canvas, json)  {
 
 let socket = io('/board');
 
-// Holds all changes done to the board.
+// This array accumulates all changes done to the board.
 let changes = [];
 
 // This array accumulates pending changes to the board.
@@ -30,37 +30,77 @@ socket.on('database-error', function() {
     $(document).location.href = "/";
 });
 
-// Get canvas width an height.
-let board =  $("#board");
-let wid = parseInt(board.width());
-let hei = parseInt(board.height());
+// Prints an update on the board.
+function apply_update(canvas, update) {
+    let tool = Tool.get_object(canvas, update);
+    tool.handleResize(Tool.global_width / canvas.width, Tool.global_height / canvas.height);
+    changes.push(tool);
+    tool.print();
+}
 
-// Bottom layer; holds full sketch.
+// Get canvas width an height.
+let board = $("#board");
+let wid = board.width();
+let hei = board.height();
+
+let zoomValues = [1/4, 1/3, 1/2, 2/3, 3/4, 4/5, 9/10, 1, 11/10, 5/4, 3/2, 7/4, 2, 5/2, 3, 4, 5];
+let zoomIndex = 7;
+
+// The bottom layer will hold the full sketch.
 let sketchBottom = function (canvas) {
 
     canvas.setup = function () {
-        let cvsObject = canvas.createCanvas(board_data.width, board_data.height);
+        let cvsObject = canvas.createCanvas(wid, hei);
         cvsObject.parent('board');
+        cvsObject.style('position', 'absolute');
+
+        cvsObject.id('bottomLayer');
 
         canvas.background(255);
     }
 
     canvas.draw = function () {
-        // draws a line immediately after receiving it from top layer
         pending.forEach(function (update) {
-            let handler = Tool.get_object(canvas, update);
-            handler.handleResize(1920 / canvas.width, 1080 / canvas.height);
-            changes.push(handler);
-            handler.print();
+            apply_update(canvas, update);
         });
         pending = [];
     }
 
-    canvas.windowResized = function() {
-        let newWid = parseInt(board.width());
-        let newHei = parseInt(board.height());
+    canvas.mouseWheel = function(event) {
+        zoomIndex -= Math.floor(event.delta / 125);
 
-        let k = Math.max( canvas.width / newWid, canvas.height / newHei);
+        zoomIndex = Math.max(zoomIndex, 0);
+        zoomIndex = Math.min(zoomIndex, zoomValues.length - 1);
+
+        canvas.windowResized();
+    }
+
+    canvas.mouseDragged = function() {
+        if (canvas.mouseButton === canvas.CENTER) {
+            let cvsObject = canvas.select('#bottomLayer');
+
+            cvsObject.position(cvsObject.position().x + canvas.movedX, cvsObject.position().y + canvas.movedY);
+        }
+    }
+
+    canvas.mouseReleased = function() {
+        if (canvas.mouseButton === canvas.CENTER) {
+            let cvsObject = canvas.select('#bottomLayer');
+            let posY = cvsObject.position().y;
+
+            if (Math.abs(posY) <= 20) {
+                posY = 0;
+            }
+
+            cvsObject.position(cvsObject.position().x, posY);
+        }
+    }
+
+    canvas.windowResized = function() {
+        let newWid = board.width();
+        let newHei = board.height();
+
+        let k = Math.max(canvas.width / newWid, canvas.height / newHei) / zoomValues[zoomIndex];
 
         canvas.resizeCanvas(canvas.width / k, canvas.height / k);
         canvas.background(255);
@@ -74,19 +114,21 @@ let sketchBottom = function (canvas) {
 
 }
 
-// top layer; holds active addition
+// The top layer will hold the current addition.
 let sketchTop = function (canvas) {
+    // The currently selected drawing tool.
     let tool;
 
     canvas.setup = function () {
-        let cvsObject = canvas.createCanvas(board_data.width, board_data.height);
-        cvsObject.mouseReleased(function () {
-            tool.mouseReleased();
+        let cvsObject = canvas.createCanvas(wid, hei);
+        cvsObject.mouseClicked(function () {
+            tool.mouseClicked();
         });
         cvsObject.parent('board');
         cvsObject.style('position', 'absolute');
 
-        // The tool will eventually be assigned values by pressing the buttons; therefore it will most likely be made global.
+        cvsObject.id('topLayer');
+
         tool = new Triangle(canvas);
     }
 
@@ -94,15 +136,47 @@ let sketchTop = function (canvas) {
         tool.draw();
     };
 
-    canvas.windowResized = function() {
-        let newWid = parseInt(board.width());
-        let newHei = parseInt(board.height());
+    canvas.mouseWheel = function() {
+        canvas.windowResized();
+    }
 
-        let k = Math.max( canvas.width / newWid, canvas.height / newHei);
+    canvas.keyReleased = function() {
+        if (canvas.keyCode === canvas.ESCAPE) {
+            tool.resetData();
+        }
+    }
+
+    canvas.mouseDragged = function() {
+        if (canvas.mouseButton === canvas.CENTER) {
+            let cvsObject = canvas.select('#topLayer');
+
+            cvsObject.position(cvsObject.position().x + canvas.movedX, cvsObject.position().y + canvas.movedY);
+        }
+    }
+
+    canvas.mouseReleased = function() {
+        if (canvas.mouseButton === canvas.CENTER) {
+            let cvsObject = canvas.select('#topLayer');
+            let posY = cvsObject.position().y;
+
+            if (Math.abs(posY) <= 20) {
+                posY = 0;
+            }
+
+            cvsObject.position(cvsObject.position().x, posY);
+        }
+    }
+
+    canvas.windowResized = function() {
+        let newWid = board.width();
+        let newHei = board.height();
+
+        console.log(zoomValues[zoomIndex]);
+        let k = Math.max(canvas.width / newWid, canvas.height / newHei) / zoomValues[zoomIndex];
 
         canvas.resizeCanvas(canvas.width / k, canvas.height / k);
 
-        tool.handleResize(k);
+        tool.resetData();
     }
 
 }
@@ -128,7 +202,16 @@ $(document).ready(async function () {
 
     pending = board_data.actions.map(x => JSON.parse(x));
 
+    Tool.global_width = 1920;
+    Tool.global_height = 1080;
     Tool.socket = socket;
+
+    let k = Tool.global_width / Tool.global_height;
+    if (wid / hei > k) {
+        wid = hei * k;
+    } else {
+        hei = wid / k;
+    }
 
     new p5(sketchBottom);
     new p5(sketchTop);
