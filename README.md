@@ -21,7 +21,7 @@ Guest = A user who collaborates to a board they do not own.
 5. As an Authenticated User I want to be able to access boards in order to become a Guest.
 6. As an Authenticated User I want to be able to log out of the app so that I can become an Non-Authenticated User.
 
-7. As a Host I want some way of sharing my work so that I can collaborate with other Users. 
+7. As a Host I want to share the board I own using a PIN so that other Users can access that board.
 8. As a Host I want to be able to restrict the access to the board of the Guests so that ill intended Guests do not interfere with my work. 
 
 9. As a Host/Guest I want to be able to use geometric tools to draw on the board.
