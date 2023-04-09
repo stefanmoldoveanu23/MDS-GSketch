@@ -54,6 +54,12 @@ let sketchBottom = function (canvas) {
             handler.print();
         });
         pending = [];
+
+        canvas.stroke(255);
+        canvas.fill(255);
+        canvas.rect(0, 0, 100, 100);
+        canvas.noFill();
+        canvas.stroke(0);
     }
 
     canvas.windowResized = function() {
