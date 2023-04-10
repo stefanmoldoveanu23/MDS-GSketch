@@ -158,10 +158,14 @@ export class Rectangle extends Geometry {
 export class Polygon extends Geometry {
     snapRadius = 10;
 
-    constructor(canvas, data=[null]) {
+    constructor(canvas, data = [null]) {
         super(canvas, data.length);
 
         this.data = data;
+    }
+
+    dist(a, b) {
+        return Math.abs(Math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2));
     }
 
     print() {
@@ -227,7 +231,6 @@ export class Polygon extends Geometry {
     }
 }
 
-
 export class Ellipse extends Geometry {
     rotation;
     projection;
@@ -291,7 +294,7 @@ export class Ellipse extends Geometry {
 
 
 export class Circle extends Geometry {
-    constructor(canvas, data=[null, null]) {
+    constructor(canvas, data = [null, null]) {
         super(canvas, 2);
         this.data = data;
     }

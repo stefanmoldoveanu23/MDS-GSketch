@@ -1,10 +1,14 @@
 import {Tool} from "./tool.js";
-import {Line, Triangle} from "./geometry.js";
+import {Circle, Ellipse, Line, Polygon, Rectangle, Triangle} from "./geometry.js";
 
 Tool.get_object = function (canvas, json)  {
     let handlers = {
         "create_line": new Line(canvas, json.params),
-        "create_triangle": new Triangle(canvas, json.params)
+        "create_triangle": new Triangle(canvas, json.params),
+        "create_rectangle": new Rectangle(canvas, json.params),
+        "create_polygon": new Polygon(canvas, json.params),
+        "create_ellipse": new Ellipse(canvas, json.params),
+        "create_circle": new Circle(canvas, json.params)
     };
     return handlers[json.name];
 }
@@ -67,12 +71,13 @@ let sketchBottom = function (canvas) {
     }
 
     canvas.mouseWheel = function(event) {
-        zoomIndex -= Math.floor(event.delta / 125);
+        zoomIndex -= Math.floor(event.delta > 0 ? 1 : -1);
 
         zoomIndex = Math.max(zoomIndex, 0);
         zoomIndex = Math.min(zoomIndex, zoomValues.length - 1);
 
         canvas.windowResized();
+        return false;
     }
 
     canvas.mouseDragged = function() {
@@ -119,6 +124,9 @@ let sketchTop = function (canvas) {
     // The currently selected drawing tool.
     let tool;
 
+    // Tool for phone touchscreen recognition. To be used later.
+    let hammer;
+
     canvas.setup = function () {
         let cvsObject = canvas.createCanvas(wid, hei);
         cvsObject.mouseClicked(function () {
@@ -129,7 +137,7 @@ let sketchTop = function (canvas) {
 
         cvsObject.id('topLayer');
 
-        tool = new Triangle(canvas);
+        tool = new Circle(canvas);
     }
 
     canvas.draw = function () {
