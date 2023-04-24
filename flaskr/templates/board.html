@@ -3,25 +3,73 @@
 {% block title %} Board Page {% endblock %}
 
 {% block body %}
+    <div class="loader-wrapper">
+        <div class="container">
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <span class="loading">Loading</span>
+            <span style="--i:1" class="dots">.</span>
+            <span style="--i:2" class="dots">.</span>
+            <span style="--i:3" class="dots">.</span>
+        </div>
+    </div>
+
     <div class="board-cont">
+
         <nav class="sidebar close dark">
             <header>
                 <i class='bx bx-chevron-right toggle'></i>
             </header>
 
             <div class="menu-bar">
-
-                <div class = "sections">
-                    <i class='bx bx-palette icon'></i>
-                    <span class="text nav-text">Color</span>
-                    <input id="picker" />
+                <div class="sections">
+                    <div class="clipboard">
+                        <input onclick="copy()" class="copy-input" value={{ pin }} id="copyClipboard" readonly>
+                        <button class="copy-btn" id="copyButton" onclick="copy()"><i class='bx bxs-copy'></i></button>
+                    </div>
                 </div>
-
+                <div class="sections">
+                    <i class='bx bx-palette icon'></i>
+                    <span class="text">Color</span>
+                    <input id="picker"/>
+                </div>
+                <div class="sections" style="flex-direction: column">
+                    <span class="text">Width</span>
+                    <div class='range'>
+                        <input type="range" min='0' max='100' step='1' value="0" id ="width"/>
+                        <span>0%</span>
+                    </div>
+                </div>
+                <div class="sections" style="flex-direction: column">
+                    <span class="text">Tools</span>
+                    <div class="tools">
+                        <div class="box smallbox" id="pointer"><i class='bx bxs-pointer'></i></div>
+                        <div class="box smallbox" id="text"><i class='bx bx-text'></i></div>
+                        <div class="box smallbox " id="pencil"><i class='bx bx-pencil'></i></div>
+                        <div class="box smallbox " id="brush"><i class='bx bxs-paint'></i></div>
+                        <div class="box smallbox " id="erase"><i class='bx bxs-eraser'></i></div>
+                        <div class="box smallbox " id="fill"><i class='bx bxs-color-fill' ></i></div>
+                        <div class="box smallbox " id="laser"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <path fill="none" d="M24 0v24H0V0h24z"></path>
+                            <path d="M8.98,13l-3.99,3c-1,0.88-1.13,2.12-1,3c0.14,0.99,0.92,2.22,2.01,2.68c1.57,0.67,3.09,0.22,4.04-0.76L18.98,13 c1.88-1.38,1-4-1-4h-5.96l7.44-4.39c0.44-0.32,0.62-0.79,0.6-1.24C20.01,2.67,19.46,2,18.6,2c-0.02,0-0.04,0-0.06,0 c-0.35,0.01-0.68,0.11-0.98,0.29L4.99,9c-0.8,0.46-1.05,1.24-1,2c0.06,1.03,0.75,2,2.01,2 M4.99,18.5c0-1.38,1.13-2.5,2.51-2.5 s2.51,1.12,2.51,2.5S8.88,21,7.5,21S4.99,19.88,4.99,18.5z"
+                            ></path>
+                        </svg></div>
+                    </div>
+                </div>
+                <div class="sections" style="flex-direction: column">
+                    <span class="text">Shapes</span>
+                    <div class="tools">
+                        <div class="box smallbox " id="line"><i class='bx bx-minus'></i></div>
+                        <div class="box smallbox " id="triangle"><i class='bx bx-shape-triangle'></i></div>
+                        <div class="box smallbox " id="square"><i class='bx bx-shape-square'></i></div>
+                    </div>
+                </div>
                 <div class="bottom-content">
                     <div class="sections">
-                        <a href="/">
-                            <i class='bx bx-log-out icon' ></i>
-                            <span class="text nav-text">Go home</span>
+                        <a href={{ url_for('show_main') }}>
+                            <i class='bx bx-log-out icon'></i>
+                            <span class="text">Go home</span>
                         </a>
                     </div>
 
@@ -45,12 +93,10 @@
 
         </div>
     </div>
-    <script type="application/javascript" charset="UTF-8">
-        let board_data = JSON.parse({{ g.board_data | tojson | safe }})
-        board_data._id = board_data._id.$oid
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+            integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+            crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.js"></script>
     <script src="{{ url_for('static', filename='board/board.js') }}" type="module"></script>
-    <script src="{{ url_for('static', filename='slidebar.js') }}"></script>
+    <script src="{{ url_for('static', filename='paint_menu/slidebar.js') }}"></script>
 {% endblock %}

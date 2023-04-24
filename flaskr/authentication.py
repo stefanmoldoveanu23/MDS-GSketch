@@ -133,6 +133,9 @@ def handle_logout():
     # Remove user_id from session.
     session.pop("user_id", None)
 
+    # Remove board_id from session.
+    session.pop("board_id", None)
+
     # Redirect to the main page.
     return redirect(url_for("show_main"))
 
@@ -142,6 +145,7 @@ def handle_logout():
 # within one request. We can use the g variable in templates.
 @authentication.before_app_request
 def load_user():
+    g.user = None
     # If we are serving a static file, do not query the database.
     if request.endpoint == 'static':
         return

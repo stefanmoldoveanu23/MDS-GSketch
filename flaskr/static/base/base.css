@@ -72,3 +72,25 @@ body {
 .button-paper:focus {
     box-shadow: rgba(0, 0, 0, .3) 2px 8px 4px -6px
 }
+
+
+.err_msg {
+    position: relative;
+    align-self: center;
+    text-align: center;
+    width: fit-content;
+    height: fit-content;
+    box-shadow: rgba(0, 0, 0, .9) 15px 28px 25px -18px;
+    box-sizing: border-box;
+    font-family: Neucha, sans-serif;
+    outline: none;
+    padding: .75rem;
+    text-decoration: none;
+    transition: all 235ms ease-in-out;
+    border-radius: 255px 15px 225px / 15px 225px 15px 255px;
+    top:6vh;
+    border: 1px solid #e9cbc6;
+    color: #d2594b;
+    background-color: #f0d8d8;
+    z-index: 300;
+}
