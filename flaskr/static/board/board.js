@@ -31,7 +31,6 @@ socket.on("data", function (data) {
 
 // On receiving changes, add them into the pending list.
 socket.on('update', function (update) {
-    socket.emit('save', board_data._id);
     pending.push(JSON.parse(update));
 });
 
@@ -58,19 +57,9 @@ let sketchBottom = function (canvas) {
     canvas.setup = function () {
         let cvsObject = canvas.createCanvas( window.innerWidth,  window.innerHeight);
         cvsObject.parent('board');
-
-        // Draw the image from the database.
-        canvas.loadPixels();
-        for (let i = 0; i < board_data.width; ++i) {
-            for (let j = 0; j < board_data.height; ++j) {
-                let index = 4 * (i * board_data.height + j);
-                canvas.pixels[index] = board_data.baseImage[index].charCodeAt(0);
-                canvas.pixels[index + 1] = board_data.baseImage[index + 1].charCodeAt(0);
-                canvas.pixels[index + 2] = board_data.baseImage[index + 2].charCodeAt(0);
-                canvas.pixels[index + 3] = board_data.baseImage[index + 3].charCodeAt(0);
-            }
-        }
-        canvas.updatePixels();
+        cvsObject.style('position', 'absolute');
+        
+        canvas.background(255);
     }
 
     canvas.draw = function () {
