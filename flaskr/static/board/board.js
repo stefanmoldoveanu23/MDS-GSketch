@@ -1,5 +1,6 @@
 import {Tool} from "./tool.js";
 import {Circle, Ellipse, Line, Polygon, Rectangle, Triangle} from "./geometry.js";
+import {FountainPen, Pen} from "./brush.js";
 
 Tool.get_object = function (canvas, json)  {
     let handlers = {
@@ -8,11 +9,14 @@ Tool.get_object = function (canvas, json)  {
         "create_rectangle": new Rectangle(canvas, json.params),
         "create_polygon": new Polygon(canvas, json.params),
         "create_ellipse": new Ellipse(canvas, json.params),
-        "create_circle": new Circle(canvas, json.params)
+        "create_circle": new Circle(canvas, json.params),
+        "draw_pen": new Pen(canvas, json.params),
+        "draw_fountain_pen": new FountainPen(canvas, json.params)
     };
     return handlers[json.name];
 }
 
+// The socket that facilitates real-time communication.
 let socket = io('/board');
 
 // This array accumulates all changes done to the board.
@@ -47,8 +51,12 @@ let board = $("#board");
 let wid = board.width();
 let hei = board.height();
 
+// The list of table zoom values.
 let zoomValues = [1/4, 1/3, 1/2, 2/3, 3/4, 4/5, 9/10, 1, 11/10, 5/4, 3/2, 7/4, 2, 5/2, 3, 4, 5];
+// The index pointing to the current zoom value.
 let zoomIndex = 7;
+// Global value that retains the mouse shift over the board when the user zooms.
+let mouseDelta = [];
 
 // The bottom layer will hold the full sketch.
 let sketchBottom = function (canvas) {
@@ -63,6 +71,7 @@ let sketchBottom = function (canvas) {
         canvas.background(255);
     }
 
+    // Draw every object in the pending list.
     canvas.draw = function () {
         pending.forEach(function (update) {
             apply_update(canvas, update);
@@ -70,16 +79,31 @@ let sketchBottom = function (canvas) {
         pending = [];
     }
 
+    // Find the new zoomIndex, the difference between the last and new mouse position(mouseDelta), resize the canvas
+    // and move it so that the mouse stays in the same relative position.
     canvas.mouseWheel = function(event) {
+        let lastZoom = zoomValues[zoomIndex];
         zoomIndex -= Math.floor(event.delta > 0 ? 1 : -1);
 
         zoomIndex = Math.max(zoomIndex, 0);
         zoomIndex = Math.min(zoomIndex, zoomValues.length - 1);
+        let currZoom = zoomValues[zoomIndex];
 
+        let k = lastZoom / currZoom;
+
+        let lastMousePos = [canvas.mouseX, canvas.mouseY];
+        let newMousePos = [lastMousePos[0] / k, lastMousePos[1] / k];
+        mouseDelta = [newMousePos[0] - lastMousePos[0], newMousePos[1] - lastMousePos[1]];
         canvas.windowResized();
+        let cvsObject = canvas.select('#bottomLayer');
+        canvas.mouseX = newMousePos[0];
+        canvas.mouseY = newMousePos[1];
+
+        cvsObject.position(cvsObject.position().x - mouseDelta[0], cvsObject.position().y - mouseDelta[1]);
         return false;
     }
 
+    // When dragging the mouse while holding the center button, move the canvas object accordingly.
     canvas.mouseDragged = function() {
         if (canvas.mouseButton === canvas.CENTER) {
             let cvsObject = canvas.select('#bottomLayer');
@@ -88,6 +112,8 @@ let sketchBottom = function (canvas) {
         }
     }
 
+    // When the user stops dragging the center button of the mouse, the canvas stops moving, and it checks whether
+    // it's close enough to any margin to snap to.
     canvas.mouseReleased = function() {
         if (canvas.mouseButton === canvas.CENTER) {
             let cvsObject = canvas.select('#bottomLayer');
@@ -101,6 +127,7 @@ let sketchBottom = function (canvas) {
         }
     }
 
+    // Resizes the canvas and redraws every object scaled properly.
     canvas.windowResized = function() {
         let newWid = board.width();
         let newHei = board.height();
@@ -124,36 +151,50 @@ let sketchTop = function (canvas) {
     // The currently selected drawing tool.
     let tool;
 
-    // Tool for phone touchscreen recognition. To be used later.
-    let hammer;
-
     canvas.setup = function () {
         let cvsObject = canvas.createCanvas(wid, hei);
         cvsObject.mouseClicked(function () {
             tool.mouseClicked();
+        });
+        cvsObject.mouseReleased(function() {
+            tool.mouseReleased();
+        });
+        cvsObject.mousePressed(function() {
+            tool.mousePressed();
         });
         cvsObject.parent('board');
         cvsObject.style('position', 'absolute');
 
         cvsObject.id('topLayer');
 
-        tool = new Circle(canvas);
+        tool = new Pen(canvas);
     }
 
     canvas.draw = function () {
         tool.draw();
     };
 
+    // Uses the already computed mouseDelta and zoomIndex to resize the canvas and move it properly.
     canvas.mouseWheel = function() {
         canvas.windowResized();
+
+        let cvsObject = canvas.select('#topLayer');
+
+        let lastMousePos = [canvas.mouseX, canvas.mouseY];
+        canvas.mouseX = mouseDelta[0] + lastMousePos[0];
+        canvas.mouseY = mouseDelta[1] + lastMousePos[1];
+
+        cvsObject.position(cvsObject.position().x - mouseDelta[0], cvsObject.position().y - mouseDelta[1]);
     }
 
+    // When the user presses ESC the current object being drawn gets deleted.
     canvas.keyReleased = function() {
         if (canvas.keyCode === canvas.ESCAPE) {
             tool.resetData();
         }
     }
 
+    // When the mouse is dragged while holding the center button the canvas object moves by the proper distance.
     canvas.mouseDragged = function() {
         if (canvas.mouseButton === canvas.CENTER) {
             let cvsObject = canvas.select('#topLayer');
@@ -162,6 +203,8 @@ let sketchTop = function (canvas) {
         }
     }
 
+    // When the user stops dragging the center button of the mouse, the canvas stops moving, and it checks whether
+    // it's close enough to any margin to snap to.
     canvas.mouseReleased = function() {
         if (canvas.mouseButton === canvas.CENTER) {
             let cvsObject = canvas.select('#topLayer');
@@ -175,16 +218,17 @@ let sketchTop = function (canvas) {
         }
     }
 
+    // Resizes the canvas and redraws the object being drawn scaled properly.
     canvas.windowResized = function() {
         let newWid = board.width();
         let newHei = board.height();
 
-        console.log(zoomValues[zoomIndex]);
         let k = Math.max(canvas.width / newWid, canvas.height / newHei) / zoomValues[zoomIndex];
 
         canvas.resizeCanvas(canvas.width / k, canvas.height / k);
 
-        tool.resetData();
+        //TODO: fix tool resize bug
+        //tool.handleResize(k);
     }
 
 }
@@ -203,15 +247,13 @@ $(document).ready(async function () {
 
             socket.emit('init', wid, hei);
         }).then(updated_board => {
-            board_data = updated_board
+            board_data = updated_board;
         });
 
     }
 
     pending = board_data.actions.map(x => JSON.parse(x));
 
-    Tool.global_width = 1920;
-    Tool.global_height = 1080;
     Tool.socket = socket;
 
     let k = Tool.global_width / Tool.global_height;

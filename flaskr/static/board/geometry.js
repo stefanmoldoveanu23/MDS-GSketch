@@ -22,7 +22,6 @@ class Geometry extends Tool {
         if (this.data[this.cntPoints - 1] !== null) {
             // If the figure has been completed, send the data to the other users.
             this.emit();
-            this.resetData();
         } else {
             // Otherwise, print the data on the canvas.
             this.print();
@@ -59,6 +58,7 @@ class Geometry extends Tool {
     }
 }
 
+// Tool that draws a line.
 export class Line extends Geometry {
     constructor(canvas, data=[null, null]) {
         super(canvas, 2);
@@ -86,7 +86,7 @@ export class Line extends Geometry {
     }
 }
 
-
+// Tool that draws a triangle.
 export class Triangle extends Geometry {
     constructor(canvas, data=[null, null, null]) {
         super(canvas, 3);
@@ -124,7 +124,7 @@ export class Triangle extends Geometry {
     }
 }
 
-
+// Tool that draws a rectangle.
 export class Rectangle extends Geometry {
     constructor(canvas, data=[null, null]) {
         super(canvas, 2);
@@ -154,8 +154,9 @@ export class Rectangle extends Geometry {
     }
 }
 
-
+// Tool that draws a polygon.
 export class Polygon extends Geometry {
+    // The radius of the circle inside which the user can complete the polygon.
     snapRadius = 10;
 
     constructor(canvas, data = [null]) {
@@ -164,6 +165,7 @@ export class Polygon extends Geometry {
         this.data = data;
     }
 
+    // Returns the distance between two points.
     dist(a, b) {
         return Math.abs(Math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2));
     }
@@ -231,15 +233,17 @@ export class Polygon extends Geometry {
     }
 }
 
+// Tool that draws an ellipse.
 export class Ellipse extends Geometry {
+    // Holds the rotation of the ellipse.
     rotation;
-    projection;
 
     constructor(canvas, data=[null, null, null]) {
         super(canvas, 3);
         this.data = data;
     }
 
+    // Returns the projection of point c on the line (a, b).
     getProjection(a, b, c) {
         let ab = ((b[0] - a[0]) * (c[0] - a[0]) + (b[1] - a[1]) * (c[1] - a[1])) / ((b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2);
         return [a[0] + (b[0] - a[0]) * ab, a[1] + (b[1] - a[1]) * ab];
@@ -252,12 +256,12 @@ export class Ellipse extends Geometry {
     print() {
         if (this.data[2] !== null) {
             this.rotation = this.getRotation(this.data[0], this.data[1]);
-            this.projection = this.getProjection(this.data[0], this.data[1], this.data[2]);
+            let projection = this.getProjection(this.data[0], this.data[1], this.data[2]);
 
             this.canvas.noFill();
             this.canvas.translate(this.data[0][0], this.data[0][1]);
             this.canvas.rotate(this.rotation);
-            this.canvas.ellipse(0, 0, this.dist(this.data[0], this.data[1]) * 2, this.dist(this.data[2], this.projection) * 2);
+            this.canvas.ellipse(0, 0, this.dist(this.data[0], this.data[1]) * 2, this.dist(this.data[2], projection) * 2);
             this.canvas.rotate(-this.rotation);
             this.canvas.translate(-this.data[0][0], -this.data[0][1]);
             this.canvas.fill(255);
@@ -269,10 +273,10 @@ export class Ellipse extends Geometry {
             this.previewPoint = this.getMousePos();
 
             this.rotation = this.getRotation(this.data[0], this.data[1]);
-            this.projection = this.getProjection(this.data[0], this.data[1], this.previewPoint);
+            let projection = this.getProjection(this.data[0], this.data[1], this.previewPoint);
 
             this.canvas.noFill();
-            this.canvas.ellipse(0, 0, this.dist(this.data[0], this.data[1]) * 2, this.dist(this.previewPoint, this.projection) * 2);
+            this.canvas.ellipse(0, 0, this.dist(this.data[0], this.data[1]) * 2, this.dist(this.previewPoint, projection) * 2);
             this.canvas.fill(255);
         } else if (this.data[0] !== null) {
             if (this.previewPoint !== null) {
@@ -292,7 +296,7 @@ export class Ellipse extends Geometry {
     }
 }
 
-
+// Tool that draws a circle.
 export class Circle extends Geometry {
     constructor(canvas, data = [null, null]) {
         super(canvas, 2);

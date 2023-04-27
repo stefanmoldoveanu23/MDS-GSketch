@@ -1,10 +1,10 @@
 // Abstract class representing any kind of tool used to sketch.
 export class Tool{
     // Global board width.
-    static global_width;
+    static global_width = 1920;
 
     // Global board height.
-    static global_height;
+    static global_height = 1080;
 
     // The socket for real-time communication.
     static socket;
@@ -26,8 +26,14 @@ export class Tool{
     // Used in place of the canvas draw function.
     draw() { }
 
-    // Used in place of the canvas mouseReleased function.
+    // Used in place of the canvas mousePressed function.
+    mousePressed() { }
+
+    // Used in place of the canvas mouseClicked function.
     mouseClicked() { }
+
+    // Used in place of the canvas mouseReleased function.
+    mouseReleased() { }
 
     // Returns current mouse position.
     getMousePos() {
@@ -48,9 +54,11 @@ export class Tool{
     // Emits the data to the backend as an update.
     emit() {
         let object = this.clone();
+        console.log(object);
         object.handleResize(Math.max(object.canvas.width / Tool.global_width, object.canvas.height / Tool.global_height));
 
         Tool.socket.emit('update', object.stringify());
+        this.resetData();
     }
 
     // Serializes the data into a JSON format.
@@ -61,7 +69,6 @@ export class Tool{
 
     // Returns a deep clone of the tool.
     clone() {
-        console.log(this.stringify());
         return Tool.get_object(this.canvas, JSON.parse(this.stringify()));
     }
 }
