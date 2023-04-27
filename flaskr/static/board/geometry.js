@@ -8,14 +8,18 @@ class Geometry extends Tool {
     // Total number of points that represent the figure.
     cntPoints
 
-    constructor(canvas, cntPoints) {
+    // Color of the figure.
+    color
+
+    constructor(canvas, cntPoints, color) {
         super(canvas);
+
         if (this.constructor === Geometry)  {
             throw new Error("Object of abstract class cannot be instantiated.");
         }
 
         this.cntPoints = cntPoints;
-        this.data = new Array(this.cntPoints).fill(null);
+        this.color = color;
     }
 
     draw() {
@@ -60,12 +64,13 @@ class Geometry extends Tool {
 
 // Tool that draws a line.
 export class Line extends Geometry {
-    constructor(canvas, data=[null, null]) {
-        super(canvas, 2);
+    constructor(canvas, color, data=[null, null]) {
+        super(canvas, 2, color);
         this.data = data;
     }
 
     print() {
+        this.canvas.stroke(this.color);
         if (this.data[1] !== null) {
             this.canvas.line(this.data[0][0], this.data[0][1], this.data[1][0], this.data[1][1]);
         } else if (this.data[0] !== null) {
@@ -81,6 +86,7 @@ export class Line extends Geometry {
     stringify() {
         return JSON.stringify({
             "name": "create_line",
+            "color":this.color,
             "params": this.data
         });
     }
@@ -88,13 +94,13 @@ export class Line extends Geometry {
 
 // Tool that draws a triangle.
 export class Triangle extends Geometry {
-    constructor(canvas, data=[null, null, null]) {
-        super(canvas, 3);
-
+    constructor(canvas, color, data=[null, null, null]) {
+        super(canvas, 3, color);
         this.data = data;
     }
 
     print() {
+        this.canvas.stroke(this.color);
         if (this.data[2] !== null) {
             this.canvas.noFill();
             this.canvas.triangle(this.data[0][0], this.data[0][1], this.data[1][0], this.data[1][1], this.data[2][0], this.data[2][1]);
@@ -119,6 +125,7 @@ export class Triangle extends Geometry {
     stringify(object) {
         return JSON.stringify({
             "name": "create_triangle",
+            "color":this.color,
             "params": this.data
         });
     }
@@ -126,8 +133,8 @@ export class Triangle extends Geometry {
 
 // Tool that draws a rectangle.
 export class Rectangle extends Geometry {
-    constructor(canvas, data=[null, null]) {
-        super(canvas, 2);
+    constructor(canvas, color, data=[null, null]) {
+        super(canvas, 2, color);
         this.data = data;
     }
 
@@ -149,6 +156,7 @@ export class Rectangle extends Geometry {
     stringify(object) {
         return JSON.stringify({
             "name": "create_rectangle",
+            "color":this.color,
             "params": this.data
         });
     }
@@ -159,8 +167,8 @@ export class Polygon extends Geometry {
     // The radius of the circle inside which the user can complete the polygon.
     snapRadius = 10;
 
-    constructor(canvas, data = [null]) {
-        super(canvas, data.length);
+    constructor(canvas, color, data = [null]) {
+        super(canvas, data.length, color);
 
         this.data = data;
     }
@@ -222,6 +230,7 @@ export class Polygon extends Geometry {
     stringify(object) {
         return JSON.stringify({
             "name": "create_polygon",
+            "color":this.color,
             "params": this.data
         });
     }
@@ -238,8 +247,8 @@ export class Ellipse extends Geometry {
     // Holds the rotation of the ellipse.
     rotation;
 
-    constructor(canvas, data=[null, null, null]) {
-        super(canvas, 3);
+    constructor(canvas, color, data=[null, null, null]) {
+        super(canvas, 3, color);
         this.data = data;
     }
 
@@ -291,6 +300,7 @@ export class Ellipse extends Geometry {
     stringify(object) {
         return JSON.stringify({
             "name": "create_ellipse",
+            "color":this.color,
             "params": this.data
         });
     }
@@ -298,8 +308,8 @@ export class Ellipse extends Geometry {
 
 // Tool that draws a circle.
 export class Circle extends Geometry {
-    constructor(canvas, data = [null, null]) {
-        super(canvas, 2);
+    constructor(canvas, color, data = [null, null]) {
+        super(canvas, 2, color);
         this.data = data;
     }
 
@@ -321,6 +331,7 @@ export class Circle extends Geometry {
     stringify(object) {
         return JSON.stringify({
             "name": "create_circle",
+            "color":this.color,
             "params": this.data
         });
     }

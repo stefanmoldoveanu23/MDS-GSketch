@@ -22,8 +22,25 @@ modeSwitch.click(function () {
 function preview(e) {
     $("#background").css("background-color", e.value);
 }
+
 $("#picker").kendoColorPicker({
     value: "#000000",
     buttons: false,
     select: preview
 });
+
+
+function copy() {
+    let copyText = $("#copyClipboard");
+    copyText.select();
+    navigator.clipboard.writeText(copyText.val());
+}
+
+
+$(function(){
+    $('.range input').on('mousemove', function(){
+        $('.range span').text($(this).val() + '%');
+    });
+});
+
+

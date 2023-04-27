@@ -4,7 +4,17 @@
 
 {% block body %}
     <div class="homecontent">
-        <div class="log-reg-btns">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="err_msg">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="log-reg-btns form_top">
             {% if g.user is none %}
                 <a href="{{ url_for('authentication.show_register') }}" class="button-login-reg button-paper">
                     Register </a>
@@ -15,21 +25,33 @@
                 </form>
             {% endif %}
         </div>
-        <div class="appname font_text">GSketch</div>
-        <!--momentan doar pentru a afisa pagina -->
-        <form action="{{ url_for('board.handle_create') }}" method="post" style="display: contents">
-            <button class="button-board create button-paper" type="submit">
-                Create new board
+        <div class="page_shape">
+            <div class="appname font_text">GSketch</div>
+            <!--momentan doar pentru a afisa pagina -->
+            <form action="{{ url_for('board.create_board') }}" method="post" style="display: contents">
+                <button class="button-board create button-paper" type="submit">
+                    Create new board
+                </button>
+            </form>
+            <button class="button-board  button-paper" id ="join_board">
+                Join board
             </button>
-        </form>
-        <button class="button-board  button-paper">
-            Join board
-        </button>
+            <div id="join">
+                <label for="Board id">Board pin</label>
+                <form action="{{ url_for('board.join_board') }}" method="post" style="display: contents">
+                    <input type="text" name="board_id"/>
+                    <button class="button-board join button-paper" type="submit">
+                        Join
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
-
     <div class="squares">
     </div>
 
-    <script src="{{ url_for('static',filename='index.js') }}"></script>
+
+
+    <script src="{{ url_for('static',filename='index/index.js') }}"></script>
 
 {% endblock %}

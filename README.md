@@ -1,6 +1,15 @@
 # MDS-GSketch
 Group project for MDS - A website where multiple people can use a whiteboard simultaneously
 
+## Info
+- Team name: Moluvi
+- Team members: Moldoveanu Ștefan (252), Lung Alexandra (252), Vișan Alexandru (252).
+
+
+
+## Use case diagram
+<img src = "/uml/use_case.png" width = 800 height = 800>
+
 ## User stories
 
 User = Anyone who uses the application. 

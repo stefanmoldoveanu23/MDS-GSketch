@@ -133,6 +133,9 @@ def handle_logout():
     # Remove user_id from session.
     session.pop("user_id", None)
 
+    # Remove board_id from session.
+    session.pop("board_id", None)
+
     # Redirect to the main page.
     return redirect(url_for("show_main"))
 

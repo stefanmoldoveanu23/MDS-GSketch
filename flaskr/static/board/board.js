@@ -4,12 +4,12 @@ import {FountainPen, Pen} from "./brush.js";
 
 Tool.get_object = function (canvas, json)  {
     let handlers = {
-        "create_line": new Line(canvas, json.params),
-        "create_triangle": new Triangle(canvas, json.params),
-        "create_rectangle": new Rectangle(canvas, json.params),
-        "create_polygon": new Polygon(canvas, json.params),
-        "create_ellipse": new Ellipse(canvas, json.params),
-        "create_circle": new Circle(canvas, json.params),
+        "create_line": new Line(canvas, json.color, json.params),
+        "create_triangle": new Triangle(canvas, json.color, json.params),
+        "create_rectangle": new Rectangle(canvas, json.color, json.params),
+        "create_polygon": new Polygon(canvas, json.color, json.params),
+        "create_ellipse": new Ellipse(canvas, json.color, json.params),
+        "create_circle": new Circle(canvas, json.color, json.params),
         "draw_pen": new Pen(canvas, json.params),
         "draw_fountain_pen": new FountainPen(canvas, json.params)
     };
@@ -25,10 +25,41 @@ let changes = [];
 // This array accumulates pending changes to the board.
 let pending = [];
 
+// Immediately after we get a connection, request the board data.
+socket.on("connect", function () {
+    socket.emit("get_data");
+})
+
+// We received the board data from the server.
+socket.on("data", function (data) {
+    // Disabled loading screen
+    $(".loader-wrapper").fadeOut("slow");
+    $(".board-cont").fadeIn("slow");
+
+    pending = []
+    let changes = JSON.parse(data)
+    console.log(changes)
+    changes.forEach(function (change) {
+        pending.push(change)
+    })
+
+    Tool.socket = socket;
+
+    let k = Tool.global_width / Tool.global_height;
+    if (wid / hei > k) {
+        wid = hei * k;
+    } else {
+        hei = wid / k;
+    }
+
+    // Create the board
+    new p5(sketchBottom);
+    new p5(sketchTop);
+})
+
+
 // On receiving changes, add them into the pending list.
 socket.on('update', function (update) {
-    socket.emit('save', board_data._id);
-
     pending.push(JSON.parse(update));
 });
 
@@ -48,7 +79,9 @@ function apply_update(canvas, update) {
 
 // Get canvas width an height.
 let board = $("#board");
+// Width of board.
 let wid = board.width();
+// Height of board.
 let hei = board.height();
 
 // The list of table zoom values.
@@ -156,7 +189,7 @@ let sketchTop = function (canvas) {
         cvsObject.mouseClicked(function () {
             tool.mouseClicked();
         });
-        cvsObject.mouseReleased(function() {
+        cvsObject.mouseReleased(function () {
             tool.mouseReleased();
         });
         cvsObject.mousePressed(function() {
@@ -167,7 +200,43 @@ let sketchTop = function (canvas) {
 
         cvsObject.id('topLayer');
 
-        tool = new Pen(canvas);
+        // The tool will eventually be assigned values by pressing the buttons; therefore it will most likely be made global.
+        let color = $('#picker').val();
+        tool = new Triangle(canvas, color);
+
+        let colorpicker = $("#picker").data("kendoColorPicker");
+        colorpicker.bind("change", function (e) {
+            color = e.value;
+            tool.color = e.value;
+        })
+
+        $('.tools').click(function (event) {
+            let selected;
+            if ($(event.target).is('i')) {
+                $(".tools").find('div').removeClass("clicked");
+                $(event.target).parent().addClass("clicked");
+                selected = $(event.target).parent().attr('id');
+            }
+            if ($(event.target).is('svg')) {
+                $(".tools").find('div').removeClass("clicked");
+                $(event.target).parent().addClass("clicked");
+                selected = $(event.target).parent().attr('id');
+            }
+            if ($(event.target).is('path')) {
+                $(".tools").find('div').removeClass("clicked");
+                $(event.target).parent().parent().addClass("clicked");
+                selected = $(event.target).parent().parent().attr('id');
+            }
+            if ($(event.target).hasClass('box')) {
+                $(".tools").find('div').removeClass("clicked");
+                $(event.target).addClass("clicked");
+                selected = $(event.target).attr('id');
+            }
+            if (selected === 'triangle')
+                tool = new Triangle(canvas, color);
+            if (selected === 'line')
+                tool = new Line(canvas, color);
+        });
     }
 
     canvas.draw = function () {
@@ -232,37 +301,3 @@ let sketchTop = function (canvas) {
     }
 
 }
-
-
-$(document).ready(async function () {
-    // TODO: socket emit join room
-
-    if (board_data.width === 0) {
-        // If the board hasn't been properly created yet, initialize it.
-
-        await new Promise((resolve) => {
-            socket.on('done_init', function(updated_board) {
-                resolve(updated_board);
-            });
-
-            socket.emit('init', wid, hei);
-        }).then(updated_board => {
-            board_data = updated_board;
-        });
-
-    }
-
-    pending = board_data.actions.map(x => JSON.parse(x));
-
-    Tool.socket = socket;
-
-    let k = Tool.global_width / Tool.global_height;
-    if (wid / hei > k) {
-        wid = hei * k;
-    } else {
-        hei = wid / k;
-    }
-
-    new p5(sketchBottom);
-    new p5(sketchTop);
-});
