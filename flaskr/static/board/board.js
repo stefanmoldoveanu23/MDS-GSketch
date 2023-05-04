@@ -236,6 +236,14 @@ let sketchTop = function (canvas) {
                 tool = new Triangle(canvas, color);
             if (selected === 'line')
                 tool = new Line(canvas, color);
+            if (selected === 'square')
+                tool = new Rectangle(canvas, color);
+            if (selected === 'circle')
+                tool = new Circle(canvas, color);
+            if (selected === 'ellipse')
+                tool = new Ellipse(canvas, color);
+            if (selected === 'poligon')
+                tool = new Polygon(canvas, color);
         });
     }
 
