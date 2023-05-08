@@ -232,6 +232,10 @@ let sketchTop = function (canvas) {
                 $(event.target).addClass("clicked");
                 selected = $(event.target).attr('id');
             }
+            if (selected === 'pencil')
+                tool = new Pen(canvas, color);
+            if (selected === 'fountain_pen')
+                tool = new FountainPen(canvas, color);
             if (selected === 'triangle')
                 tool = new Triangle(canvas, color);
             if (selected === 'line')
@@ -244,6 +248,7 @@ let sketchTop = function (canvas) {
                 tool = new Ellipse(canvas, color);
             if (selected === 'poligon')
                 tool = new Polygon(canvas, color);
+
         });
     }
 
