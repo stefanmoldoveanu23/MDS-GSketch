@@ -40,3 +40,7 @@ Guest = A user who collaborates to a board they do not own.
 13. As a Host/Guest I want some way of exporting my work from the web application to my own computer so that I can have a local copy of my work. 
 14. As a Host/Guest I want to be able to undo the board to a previous state so that I can discard any unwanted changes. 
 15. As a Host/Guest I want to be able to choose a nickname so that other Users are aware of who I am. 
+
+## Backlog 
+
+We monitorized our backlog using Trello. It can be found [here](https://trello.com/b/wWCwnMpM/mds).

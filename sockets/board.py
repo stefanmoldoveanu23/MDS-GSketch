@@ -3,7 +3,7 @@ from flask import session, current_app
 import json
 from pymongo.errors import PyMongoError
 from bson.objectid import ObjectId
-
+from sockets.room import Room
 
 # Description of the client-server protocol:
 # 1) The client creates a web socket and connects to the server.
@@ -19,16 +19,38 @@ from bson.objectid import ObjectId
 #        any user modifies the board.
 #    b) "data" : the server sends the client the board data, as a response to "get_data"
 
+
+# A dictionary of rooms, where the key is the board_id and the value is the room object.
+rooms = {}
+
+
 class BoardNamespace(Namespace):
     def on_connect(self):
         # Reject the session if it does not contain board_id.
         if "board_id" not in session:
             return False
+
+        board_id = session["board_id"]
+
         # If the session contains the board_id, make the socket join the room given by board_id.
-        join_room(session["board_id"])
+        join_room(board_id)
+
+        # Add a new room to the dictionary of rooms if it does not exist already.
+        if board_id not in rooms:
+            rooms[board_id] = Room(board_id)
+
+        # Increment the number of users in the room.
+        rooms[board_id].num_users += 1
 
     def on_disconnect(self):
-        pass
+        board_id = session["board_id"]
+
+        # Decrement the number of users.
+        rooms[board_id].num_users -= 1
+
+        # Remove the room from the dictionary if it is empty.
+        if rooms[board_id].num_users == 0:
+            rooms.pop(board_id)
 
     # A client requested the board data.
     def on_get_data(self):
@@ -36,20 +58,13 @@ class BoardNamespace(Namespace):
         # Note that the session must contain board_id, otherwise the socket would have been rejected.
         board_id = session["board_id"]
 
-        # Get the "events" collection.
-        events = current_app.config.db.events
-
-        # Query the database for the changes associated with the current board.
+        # Get the changes from the corresponding room.
         # Handle any database errors.
         try:
-            # Exclude _id and board_id.
-            changes = events.find({"board_id": ObjectId(board_id)}, {"_id": 0, "board_id": 0})
+            json_data = rooms[board_id].get_all_changes()
         except PyMongoError as e:
             print(str(e))
             return
-
-        # Convert the data to json.
-        json_data = json.dumps(list(changes))
 
         # Send the data to the user that has requested it.
         emit("data", json_data)
@@ -62,31 +77,16 @@ class BoardNamespace(Namespace):
         # TODO Check if data is valid before storing it in the database.
         data = json.loads(json_data)
 
-        # Add board_id to the record.
-        data["board_id"] = ObjectId(board_id)
-
-        # Get the "events" collection.
-        events = current_app.config.db.events
-
-        # Insert the update in the database.
-        # Handle any database errors.
-        try:
-            events.insert_one(data)
-        except PyMongoError as e:
-            print(str(e))
-            # Do not emit the change.
-            return
-
-        # TODO Fix race condition.
-        # If the client handlers are handled in separate threads/processes,
-        # there might be a situation where a client might get the order of changes wrong.
-        # Consider the case where two clients make a change simultaneously (A and B).
-        # Let's say that A's change gets inserted in the database before B's change.
-        # Then, it can be possible that B's change is inserted into the database
-        # and transmitted to the room before A's change gets transmitted. Therefore,
-        # B got transmitted before A, but A was inserted before B in the database.
-        # To avoid this, we can implement per room locks, so that per-room operations
-        # are thread-safe.
+        rooms[board_id].mutex.acquire()
 
         # Broadcast the update to all the connections in the room.
         emit('update', json_data, to=session["board_id"])
+
+        # Update the corresponding room. Handle any database errors.
+        try:
+            rooms[board_id].update(data)
+        except PyMongoError as e:
+            print(str(e))
+            return
+
+        rooms[board_id].mutex.release()
