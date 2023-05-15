@@ -191,8 +191,9 @@ export class Polygon extends Geometry {
             this.canvas.stroke(0);
         }
 
-        for (let i = 1; i < this.cntPoints - 1; ++i) {
-            this.canvas.line(this.data[i - 1][0], this.data[i - 1][1], this.data[i][0], this.data[i][1]);
+        this.canvas.beginShape();
+        for (let i = 0; i < this.cntPoints - 1; ++i) {
+            this.canvas.vertex(this.data[i][0], this.data[i][1]);
         }
 
         if (this.cntPoints > 1 && this.data[this.cntPoints - 1] === null) {
@@ -201,11 +202,12 @@ export class Polygon extends Geometry {
                 this.previewPoint = this.data[0];
             }
 
-            this.canvas.line(this.data[this.cntPoints - 2][0], this.data[this.cntPoints - 2][1], this.previewPoint[0], this.previewPoint[1])
-            this.canvas.line(this.previewPoint[0], this.previewPoint[1], this.data[0][0], this.data[0][1]);
+            this.canvas.vertex(this.previewPoint[0], this.previewPoint[1]);
+            this.canvas.vertex(this.data[0][0], this.data[0][1]);
         } else if (this.data[this.cntPoints - 1] !== null) {
-            this.canvas.line(this.data[this.cntPoints - 2][0], this.data[this.cntPoints - 2][1], this.data[this.cntPoints - 1][0], this.data[this.cntPoints - 1][1])
+            this.canvas.vertex(this.data[this.cntPoints - 1][0], this.data[this.cntPoints - 1][1]);
         }
+        this.canvas.endShape();
     }
 
     mouseClicked() {

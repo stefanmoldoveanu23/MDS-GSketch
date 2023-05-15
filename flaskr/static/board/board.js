@@ -1,6 +1,6 @@
 import {Tool} from "./tool.js";
 import {Circle, Ellipse, Line, Polygon, Rectangle, Triangle} from "./geometry.js";
-import {FountainPen, Pen} from "./brush.js";
+import {AirBrush, Eraser, FountainPen, Pen} from "./brush.js";
 
 Tool.get_object = function (canvas, json)  {
     let handlers = {
@@ -11,7 +11,9 @@ Tool.get_object = function (canvas, json)  {
         "create_ellipse": new Ellipse(canvas, json.color, json.params),
         "create_circle": new Circle(canvas, json.color, json.params),
         "draw_pen": new Pen(canvas, json.params),
-        "draw_fountain_pen": new FountainPen(canvas, json.params)
+        "draw_fountain_pen": new FountainPen(canvas, json.params),
+        "draw_airbrush": new AirBrush(canvas, json.params),
+        "erase": new Eraser(canvas, json.params)
     };
     return handlers[json.name];
 }
@@ -186,6 +188,7 @@ let sketchTop = function (canvas) {
 
     canvas.setup = function () {
         let cvsObject = canvas.createCanvas(wid, hei);
+
         cvsObject.mouseClicked(function () {
             tool.mouseClicked();
         });
@@ -202,7 +205,7 @@ let sketchTop = function (canvas) {
 
         // The tool will eventually be assigned values by pressing the buttons; therefore it will most likely be made global.
         let color = $('#picker').val();
-        tool = new Triangle(canvas, color);
+        tool = new AirBrush(canvas);
 
         let colorpicker = $("#picker").data("kendoColorPicker");
         colorpicker.bind("change", function (e) {
@@ -233,9 +236,11 @@ let sketchTop = function (canvas) {
                 selected = $(event.target).attr('id');
             }
             if (selected === 'pencil')
-                tool = new Pen(canvas, color);
+                tool = new Pen(canvas);
             if (selected === 'fountain_pen')
-                tool = new FountainPen(canvas, color);
+                tool = new FountainPen(canvas);
+            if (selected === 'erase')
+                tool = new Eraser(canvas);
             if (selected === 'triangle')
                 tool = new Triangle(canvas, color);
             if (selected === 'line')
