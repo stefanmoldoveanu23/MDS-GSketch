@@ -35,6 +35,12 @@ export class Tool{
     // Used in place of the canvas mouseReleased function.
     mouseReleased() { }
 
+    // Used in place of the canvas keyTyped function.
+    keyTyped() { }
+
+    // Used in place of the canvas keyPressed function.
+    keyPressed() { }
+
     // Returns current mouse position.
     getMousePos() {
         return [this.canvas.mouseX, this.canvas.mouseY];
@@ -54,7 +60,6 @@ export class Tool{
     // Emits the data to the backend as an update.
     emit() {
         let object = this.clone();
-        console.log(object);
         object.handleResize(Math.max(object.canvas.width / Tool.global_width, object.canvas.height / Tool.global_height));
 
         Tool.socket.emit('update', object.stringify());

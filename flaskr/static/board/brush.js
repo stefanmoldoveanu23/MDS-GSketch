@@ -27,9 +27,7 @@ class Brush extends Tool {
     draw() {
         if (this.drawing) {
             this.canvas.clear();
-            //if (this.data.length === 0 || (this.getMousePos()[0] !== this.data[this.data.length - 1][0] || this.getMousePos()[1] !== this.data[this.data.length - 1][1])) {
-                this.data.push(this.getMousePos());
-            //}
+            this.data.push(this.getMousePos());
             this.print();
         }
     }
@@ -41,7 +39,6 @@ class Brush extends Tool {
 
         while (this.emitting) { }
 
-        console.log(this.data);
         this.data.push(this.getMousePos());
         this.drawing = true;
     }
@@ -108,7 +105,7 @@ export class FountainPen extends Brush {
 
             canvas.fill(0);
             canvas.quad(A[0], A[1], B[0], B[1], C[0], C[1], D[0], D[1]);
-            canvas.noFill();
+            canvas.fill(255);
         });
     }
 
@@ -158,7 +155,6 @@ export class AirBrush extends Brush {
     resetData() {
         super.resetData();
         this.data = [this.canvas.random(1000)];
-        console.log(this.data);
     }
 
     stringify() {
@@ -176,7 +172,6 @@ export class Eraser extends Brush {
 
     constructor(canvas, data=[]) {
         super(canvas, data, function(p1, p2) {
-            canvas.fill(255);
             canvas.noStroke();
             canvas.circle(p1[0], p1[1], 2 * Eraser.radius);
 
@@ -197,7 +192,6 @@ export class Eraser extends Brush {
 
             canvas.circle(p2[0], p2[1], 2 * Eraser.radius);
             canvas.stroke(0);
-            canvas.noFill();
         });
     }
 

@@ -1,6 +1,7 @@
 import {Tool} from "./tool.js";
 import {Circle, Ellipse, Line, Polygon, Rectangle, Triangle} from "./geometry.js";
 import {AirBrush, Eraser, FountainPen, Pen} from "./brush.js";
+import {Text} from "./text.js";
 
 Tool.get_object = function (canvas, json)  {
     let handlers = {
@@ -13,7 +14,8 @@ Tool.get_object = function (canvas, json)  {
         "draw_pen": new Pen(canvas, json.params),
         "draw_fountain_pen": new FountainPen(canvas, json.params),
         "draw_airbrush": new AirBrush(canvas, json.params),
-        "erase": new Eraser(canvas, json.params)
+        "erase": new Eraser(canvas, json.params),
+        "write_text": new Text(canvas, json.params)
     };
     return handlers[json.name];
 }
@@ -198,14 +200,19 @@ let sketchTop = function (canvas) {
         cvsObject.mousePressed(function() {
             tool.mousePressed();
         });
+        canvas.keyTyped = function() {
+            tool.keyTyped();
+        }
+        canvas.keyPressed = function() {
+            tool.keyPressed();
+        }
         cvsObject.parent('board');
         cvsObject.style('position', 'absolute');
 
         cvsObject.id('topLayer');
 
-        // The tool will eventually be assigned values by pressing the buttons; therefore it will most likely be made global.
         let color = $('#picker').val();
-        tool = new AirBrush(canvas);
+        tool = new Text(canvas, [], true);
 
         let colorpicker = $("#picker").data("kendoColorPicker");
         colorpicker.bind("change", function (e) {
@@ -239,6 +246,8 @@ let sketchTop = function (canvas) {
                 tool = new Pen(canvas);
             if (selected === 'fountain_pen')
                 tool = new FountainPen(canvas);
+            if (selected === 'brush')
+                tool = new AirBrush(canvas);
             if (selected === 'erase')
                 tool = new Eraser(canvas);
             if (selected === 'triangle')
@@ -253,7 +262,9 @@ let sketchTop = function (canvas) {
                 tool = new Ellipse(canvas, color);
             if (selected === 'poligon')
                 tool = new Polygon(canvas, color);
-
+            if (selected === 'text') {
+                tool = new Text(canvas, [], true);
+            }
         });
     }
 
@@ -314,8 +325,7 @@ let sketchTop = function (canvas) {
 
         canvas.resizeCanvas(canvas.width / k, canvas.height / k);
 
-        //TODO: fix tool resize bug
-        //tool.handleResize(k);
+        tool.handleResize(k);
     }
 
 }

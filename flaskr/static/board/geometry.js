@@ -187,10 +187,11 @@ export class Polygon extends Geometry {
             this.canvas.noStroke();
             this.canvas.fill('rgba(0, 255, 255, 0.25)');
             this.canvas.ellipse(this.data[0][0], this.data[0][1], this.snapRadius, this.snapRadius);
-            this.canvas.noFill();
+            this.canvas.fill(255);
             this.canvas.stroke(0);
         }
 
+        this.canvas.noFill();
         this.canvas.beginShape();
         for (let i = 0; i < this.cntPoints - 1; ++i) {
             this.canvas.vertex(this.data[i][0], this.data[i][1]);
@@ -208,6 +209,7 @@ export class Polygon extends Geometry {
             this.canvas.vertex(this.data[this.cntPoints - 1][0], this.data[this.cntPoints - 1][1]);
         }
         this.canvas.endShape();
+        this.canvas.fill(255);
     }
 
     mouseClicked() {
