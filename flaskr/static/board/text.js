@@ -18,8 +18,8 @@ export class Text extends Tool {
     // The rate at which the i-cursor flickers(default = 750ms).
     static flickerRate = 750;
 
-    constructor(canvas, data=[], editing=false) {
-        super(canvas);
+    constructor(canvas, color, data=[], editing=false) {
+        super(canvas, color);
 
         this.data = data;
         this.editing = editing;
@@ -146,13 +146,13 @@ export class Text extends Tool {
         if (this.data.length === 0) {
             let previewPoint = this.getMousePos();
             this.canvas.noStroke();
-            this.canvas.fill(0);
+            this.canvas.fill(this.color);
             this.canvas.text("Text goes here...", previewPoint[0], previewPoint[1]);
             this.canvas.fill(255);
             this.canvas.stroke(0);
         } else {
             this.canvas.noStroke();
-            this.canvas.fill(0);
+            this.canvas.fill(this.color);
             this.canvas.text(this.data[1], this.data[0][0], this.data[0][1]);
             this.canvas.fill(255);
             this.canvas.stroke(0);
@@ -250,6 +250,7 @@ export class Text extends Tool {
     stringify() {
         return JSON.stringify({
             "name": "write_text",
+            "color": this.color,
             "params": this.data
         });
     }

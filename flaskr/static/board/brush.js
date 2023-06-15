@@ -11,8 +11,8 @@ class Brush extends Tool {
     // Variable that tells if data is being emitted.
     emitting;
 
-    constructor(canvas, data, interpolation=function() {}) {
-        super(canvas);
+    constructor(canvas, data, color, interpolation=function() {}) {
+        super(canvas, color);
         if (this.constructor === Brush) {
             throw new Error("Object of abstract class cannot be instantiated.");
         }
@@ -68,17 +68,19 @@ class Brush extends Tool {
     }
 
     print() {
+        this.canvas.stroke(this.color);
         for (let i = 1; i < this.data.length; ++i) {
             this.interpolation(this.data[i - 1], this.data[i]);
         }
+        this.canvas.stroke(0);
     }
 
 }
 
 // A tool that imitates a pen.
 export class Pen extends Brush {
-    constructor(canvas, data=[]) {
-        super(canvas, data, function(p1, p2) {
+    constructor(canvas, color, data=[]) {
+        super(canvas, data, color, function(p1, p2) {
             canvas.line(p1[0], p1[1], p2[0], p2[1]);
         });
     }
@@ -86,6 +88,7 @@ export class Pen extends Brush {
     stringify() {
         return JSON.stringify({
             "name": "draw_pen",
+            "color": this.color,
             "params": this.data
         });
     }
@@ -96,14 +99,14 @@ export class FountainPen extends Brush {
     // Holds the delta distance of the fountain pen line.
     static delta = [2, 2];
 
-    constructor(canvas, data=[]) {
-        super(canvas, data, function(p1, p2) {
+    constructor(canvas, color, data=[]) {
+        super(canvas, data, color, function(p1, p2) {
             let A = [p1[0] - FountainPen.delta[0], p1[1] + FountainPen.delta[1]];
             let B = [p1[0] + FountainPen.delta[0], p1[1] - FountainPen.delta[1]];
             let C = [p2[0] + FountainPen.delta[0], p2[1] - FountainPen.delta[1]];
             let D = [p2[0] - FountainPen.delta[0], p2[1] + FountainPen.delta[1]];
 
-            canvas.fill(0);
+            canvas.fill(this.color);
             canvas.quad(A[0], A[1], B[0], B[1], C[0], C[1], D[0], D[1]);
             canvas.fill(255);
         });
@@ -112,6 +115,7 @@ export class FountainPen extends Brush {
     stringify() {
         return JSON.stringify({
             "name": "draw_fountain_pen",
+            "color": this.color,
             "params": this.data
         });
     }
@@ -125,13 +129,13 @@ export class AirBrush extends Brush {
     // The radius of the airbrush.
     radius = 10;
 
-    constructor(canvas, data=[]) {
+    constructor(canvas, color, data=[]) {
         // The first element of data is the seed.
         if (data.length === 0) {
             data.push(canvas.random());
         }
 
-        super(canvas, data, function(p1, p2) {
+        super(canvas, data, color, function(p1, p2) {
             for (let i = 0; i < AirBrush.power; ++i) {
                 let polar = [canvas.random(this.radius), canvas.random(2 * canvas.PI)];
                 canvas.point(p2[0] + polar[0] * canvas.cos(polar[1]), p2[1] + polar[0] * canvas.sin(polar[1]));
@@ -160,6 +164,7 @@ export class AirBrush extends Brush {
     stringify() {
         return JSON.stringify({
             "name": "draw_airbrush",
+            "color": this.color,
             "params": this.data
         });
     }
@@ -171,8 +176,9 @@ export class Eraser extends Brush {
     static radius = 10;
 
     constructor(canvas, data=[]) {
-        super(canvas, data, function(p1, p2) {
+        super(canvas, data, canvas.color(255), function(p1, p2) {
             canvas.noStroke();
+            canvas.fill(255);
             canvas.circle(p1[0], p1[1], 2 * Eraser.radius);
 
             let vector = [p2[0] - p1[0], p2[1] - p1[1]];

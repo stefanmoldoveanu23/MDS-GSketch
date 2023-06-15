@@ -12,15 +12,19 @@ export class Tool{
     // Data resulting from the usage of the tool.
     data;
 
+    // Color of the tool.
+    color;
+
     // The canvas that is drawn on.
     canvas;
 
-    constructor(canvas) {
+    constructor(canvas, color) {
         if (this.constructor === Tool) {
             throw new Error("Object of abstract class cannot be instantiated.");
         }
 
         this.canvas = canvas;
+        this.color = color;
     }
 
     // Used in place of the canvas draw function.
