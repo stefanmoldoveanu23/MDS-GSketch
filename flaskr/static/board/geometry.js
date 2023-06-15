@@ -8,18 +8,14 @@ class Geometry extends Tool {
     // Total number of points that represent the figure.
     cntPoints
 
-    // Color of the figure.
-    color
-
     constructor(canvas, cntPoints, color) {
-        super(canvas);
+        super(canvas, color);
 
         if (this.constructor === Geometry)  {
             throw new Error("Object of abstract class cannot be instantiated.");
         }
 
         this.cntPoints = cntPoints;
-        this.color = color;
     }
 
     draw() {
@@ -81,6 +77,7 @@ export class Line extends Geometry {
 
             this.canvas.line(this.data[0][0], this.data[0][1], this.previewPoint[0], this.previewPoint[1]);
         }
+        this.canvas.stroke(0);
     }
 
     stringify() {
@@ -120,6 +117,7 @@ export class Triangle extends Geometry {
             this.previewPoint = this.getMousePos();
             this.canvas.line(this.data[0][0], this.data[0][1], this.previewPoint[0], this.previewPoint[1]);
         }
+        this.canvas.stroke(0);
     }
 
     stringify(object) {
@@ -139,6 +137,7 @@ export class Rectangle extends Geometry {
     }
 
     print() {
+        this.canvas.stroke(this.color);
         if (this.data[1] !== null) {
             this.canvas.noFill();
             this.canvas.rect(this.data[0][0], this.data[0][1], this.data[1][0] - this.data[0][0], this.data[1][1] - this.data[0][1]);
@@ -151,6 +150,7 @@ export class Rectangle extends Geometry {
             this.canvas.rect(this.data[0][0], this.data[0][1], this.previewPoint[0] - this.data[0][0], this.previewPoint[1] - this.data[0][1]);
             this.canvas.fill(255);
         }
+        this.canvas.stroke(0);
     }
 
     stringify(object) {
@@ -191,6 +191,7 @@ export class Polygon extends Geometry {
             this.canvas.stroke(0);
         }
 
+        this.canvas.stroke(this.color);
         this.canvas.noFill();
         this.canvas.beginShape();
         for (let i = 0; i < this.cntPoints - 1; ++i) {
@@ -210,6 +211,7 @@ export class Polygon extends Geometry {
         }
         this.canvas.endShape();
         this.canvas.fill(255);
+        this.canvas.stroke(0);
     }
 
     mouseClicked() {
@@ -267,6 +269,7 @@ export class Ellipse extends Geometry {
     }
 
     print() {
+        this.canvas.stroke(this.color);
         if (this.data[2] !== null) {
             this.rotation = this.getRotation(this.data[0], this.data[1]);
             let projection = this.getProjection(this.data[0], this.data[1], this.data[2]);
@@ -299,6 +302,7 @@ export class Ellipse extends Geometry {
             this.previewPoint = this.getMousePos();
             this.canvas.line(this.data[0][0], this.data[0][1], this.previewPoint[0], this.previewPoint[1]);
         }
+        this.canvas.stroke(0);
     }
 
     stringify(object) {
@@ -318,6 +322,7 @@ export class Circle extends Geometry {
     }
 
     print() {
+        this.canvas.stroke(this.color);
         if (this.data[1] !== null) {
             this.canvas.noFill();
             this.canvas.ellipse(this.data[0][0], this.data[0][1], this.dist(this.data[0], this.data[1]) * 2, this.dist(this.data[0], this.data[1]) * 2);
@@ -330,6 +335,7 @@ export class Circle extends Geometry {
             this.canvas.ellipse(this.data[0][0], this.data[0][1], this.dist(this.data[0], this.previewPoint) * 2, this.dist(this.data[0], this.previewPoint) * 2);
             this.canvas.fill(255);
         }
+        this.canvas.stroke(0);
     }
 
     stringify(object) {

@@ -11,11 +11,11 @@ Tool.get_object = function (canvas, json)  {
         "create_polygon": new Polygon(canvas, json.color, json.params),
         "create_ellipse": new Ellipse(canvas, json.color, json.params),
         "create_circle": new Circle(canvas, json.color, json.params),
-        "draw_pen": new Pen(canvas, json.params),
-        "draw_fountain_pen": new FountainPen(canvas, json.params),
-        "draw_airbrush": new AirBrush(canvas, json.params),
+        "draw_pen": new Pen(canvas, json.color, json.params),
+        "draw_fountain_pen": new FountainPen(canvas, json.color, json.params),
+        "draw_airbrush": new AirBrush(canvas, json.color, json.params),
         "erase": new Eraser(canvas, json.params),
-        "write_text": new Text(canvas, json.params)
+        "write_text": new Text(canvas, json.color, json.params)
     };
     return handlers[json.name];
 }
@@ -212,7 +212,7 @@ let sketchTop = function (canvas) {
         cvsObject.id('topLayer');
 
         let color = $('#picker').val();
-        tool = new Text(canvas, [], true);
+        tool = new Text(canvas, color, [], true);
 
         let colorpicker = $("#picker").data("kendoColorPicker");
         colorpicker.bind("change", function (e) {
@@ -243,11 +243,11 @@ let sketchTop = function (canvas) {
                 selected = $(event.target).attr('id');
             }
             if (selected === 'pencil')
-                tool = new Pen(canvas);
+                tool = new Pen(canvas, color);
             if (selected === 'fountain_pen')
-                tool = new FountainPen(canvas);
+                tool = new FountainPen(canvas, color);
             if (selected === 'brush')
-                tool = new AirBrush(canvas);
+                tool = new AirBrush(canvas, color);
             if (selected === 'erase')
                 tool = new Eraser(canvas);
             if (selected === 'triangle')
@@ -263,7 +263,7 @@ let sketchTop = function (canvas) {
             if (selected === 'poligon')
                 tool = new Polygon(canvas, color);
             if (selected === 'text') {
-                tool = new Text(canvas, [], true);
+                tool = new Text(canvas, color, [], true);
             }
         });
     }
