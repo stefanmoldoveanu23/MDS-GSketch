@@ -10,6 +10,9 @@ Group project for MDS - A website where multiple people can use a whiteboard sim
 ## Use case diagram
 <img src = "/uml/use_case.png" width = 800 height = 800>
 
+## Class diagram
+<img src = "/uml/class_diagram.png" width = 800 height = 800>
+
 ## User stories
 
 User = Anyone who uses the application. 
