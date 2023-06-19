@@ -51,3 +51,6 @@ We monitorized our backlog using Trello. It can be found [here](https://trello.c
 ## Demo 
 
 It can be found [here](https://youtu.be/GU9pFRf1rcA).
+
+## Link to app:
+https://mds-gsketch-e1e657215c2a.herokuapp.com/
